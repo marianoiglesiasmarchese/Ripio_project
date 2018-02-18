@@ -9,5 +9,5 @@ class Peso(Currency):
 
 
     def __init__(self, params):
-
+        print ""
         

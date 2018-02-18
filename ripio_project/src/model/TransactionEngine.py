@@ -8,5 +8,8 @@ class TransactionEngine(object):
 
 
     def __init__(self, params):
-
+        print ""
         
+        
+    def realizarTransaccion(self, usuario1, usuario2, monto):
+        return True    
