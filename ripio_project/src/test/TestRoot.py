@@ -4,9 +4,10 @@ Created on 5 feb. 2018
 @author: miglesias
 '''
 
-from root import root
+from root import Root
 import unittest
 import json
+from model.User import User
 
 class TestRoot(unittest.TestCase):
 
@@ -23,12 +24,24 @@ class TestRoot(unittest.TestCase):
         # os.close(self.db_fd)
         # os.unlink(self.app.config['DATABASE'])
 
-    def test_empty_db(self):
-        client = root.app.test_client()
-        response = client.get("/").data
-        responseDecoded = json.JSONDecoder().decode(response)
+    def test_root_path(self):
+        client = Root.app.test_client()
+        with Root.app.app_context():
+            Root.init_db_and_populate()
+        
+        response = client.get("/user/1").data
+        responseDecoded = User.fromJson(response)
         # assert b'World' in responseDecoded
-        self.assertEqual(responseDecoded, {"currency": ["peso", "dollar"]})
+        u = User('admin', 'admin@localhost')
+        
+        self.assertEqual(responseDecoded, u)
+
+    def test_db(self):
+        pass
+            
+        #self.assertEqual(user_finded, user)                
+        
 
 if __name__ == '__main__':
     unittest.main()    
+    
