@@ -13,7 +13,8 @@ class Account(Base):
     __tablename__ = 'accounts'
     id = Column(Integer, primary_key=True)
     name = Column(String(50))
-    currency = Column(String(50))
+    
+    currency = relationship("Currency", back_populates="account")
     
     user_id = Column(ForeignKey('users.id'))
     user = relationship("User", back_populates="accounts")

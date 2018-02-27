@@ -18,7 +18,10 @@ class Transaction(Base):
     
     target_user_id = Column(ForeignKey('users.id'))
     target_user = relationship("User", back_populates="received_transactions")
-
+    
+    operation_id = Column(ForeignKey('operations.id'))
+    operation = relationship("Operation", back_populates="transaction")
+ 
     def __init__(self, params):
         '''
         Constructor

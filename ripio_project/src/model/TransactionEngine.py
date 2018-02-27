@@ -13,5 +13,5 @@ class TransactionEngine(object):
         '''
         
         
-    def realizarTransaccion(self, usuario1, usuario2, monto):
-        return True    
+    def do_transaction(self, origin_user, target_user, operation):
+        pass
