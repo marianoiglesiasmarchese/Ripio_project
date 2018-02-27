@@ -8,7 +8,9 @@ class TransactionEngine(object):
 
 
     def __init__(self, params):
-        print ""
+        '''
+        Constructor
+        '''
         
         
     def realizarTransaccion(self, usuario1, usuario2, monto):

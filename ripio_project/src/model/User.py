@@ -4,7 +4,8 @@ Created on 5 feb. 2018
 @author: miglesias
 '''
 
-from sqlalchemy import Column, ForeignKey, Integer, String 
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 from src.orm.BaseConnection import Base
 import json
 
@@ -13,10 +14,18 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), unique=True)
     email = Column(String(120), unique=True)
-
+    accounts = relationship("Account", back_populates="user")
+    
+    emited_transactions = relationship("Transaction", back_populates="origin_user")
+    
+    received_transactions  = relationship("Transaction", back_populates="target_user")
+    
     def __init__(self, name=None, email=None):
         self.name = name
         self.email = email
+
+    def get_balance_for_account(self, account):
+        pass 
 
     def toJSON(self):
         return {
