@@ -13,15 +13,15 @@ class Currency(Base):
     __tablename__ = 'currencies'
     id = Column(Integer, primary_key=True)
     name = Column(String(50), unique=True)
-    simbol = Column(String(3), unique=True)
+    symbol = Column(String(3), unique=True)
 
     account_id = Column(Integer, ForeignKey('accounts.id'))
     
     operation_id = Column(Integer, ForeignKey('operations.id'))
 
-    def __init__(self, name=None, simbol=None):
+    def __init__(self, name=None, symbol=None):
         self.name = name
-        self.simbol = simbol
+        self.symbol = symbol
         
     @classmethod   
     def fromJson(self, json_stream):

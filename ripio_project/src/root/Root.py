@@ -4,7 +4,7 @@ Created on 5 feb. 2018
 @author: miglesias
 '''
  
-from flask import Flask, jsonify, request, Response
+from flask import Flask, jsonify, request, Response, make_response
 import json
 import logging
 from src.orm.BaseConnection import db_session, init_db, engine
@@ -31,22 +31,26 @@ def shutdown_session(exception=None ):
 @app.route("/")
 def root():
     # return "Hello, World!"
-    return json.JSONEncoder().encode({"currency": ["peso", "dollar"]})
-
-
-@app.route("/user/<user_id>")
-def userAccount(user_id):
-    #logger.info('finding user')
-    user = db.query(User).filter(User.id == user_id).first() 
-    return jsonify(user.toJSON())
-  
+    return json.JSONEncoder().encode({"currency": ["peso", "dollar"]}) 
 
 @app.route("/user/<user_id>")
 def find_user(user_id):
     #logger.info('finding user')
     user = db.query(User).filter(User.id == user_id).first() 
     return jsonify(user.toJSON())
-  
+
+@app.route("/users")
+def find_all_users():
+
+    userListResult = [] 
+    
+    #logger.info('finding user')
+    userList = db.query(User).all()
+    
+    for user in userList:
+        userListResult.append(user.toJSON())
+    
+    return jsonify(userListResult)
 
 @app.route('/currencies', methods=['POST'])
 def create_currency():
@@ -63,6 +67,21 @@ def create_currency():
         response = Response(jsonify(new_currency), status=HttpStatus.HTTP_OK_BASIC, mimetype='application/json')
     return response  
   
+@app.route('/user/<user_id>/accounts', methods=['POST'])
+def create_account_for_user(user_id):
+    """Registers the user."""
+    response = None
+    
+    if not request.form['account'] or not request.form['currency'] :
+        exception = BadRequestError("","")
+        response = Response(jsonify(exception), status=HttpStatus.HTTP_BAD_REQUEST, mimetype='application/json')
+    else:
+        ''' crear una cuenta para un usuario en particular y de un tipo particular '''
+        new_currency = Account()
+        db.add(new_currency)
+        db.commit()
+        response = Response(jsonify(new_currency), status=HttpStatus.HTTP_OK_BASIC, mimetype='application/json')
+    return response   
   
 ''' TODO >  posiblemente deba cambiar el rest'''
 @app.route("/user/<origin_id>/do_transaction_to/<target_id>")
