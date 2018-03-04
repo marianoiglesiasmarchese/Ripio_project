@@ -15,9 +15,30 @@ class Currency(Base):
     name = Column(String(50), unique=True)
     simbol = Column(String(3), unique=True)
 
-    account_id = Column(ForeignKey('accounts.id'))
-    account = relationship("Account", back_populates="currency")
+    account_id = Column(Integer, ForeignKey('accounts.id'))
+    
+    operation_id = Column(Integer, ForeignKey('operations.id'))
 
     def __init__(self, name=None, simbol=None):
         self.name = name
         self.simbol = simbol
+        
+    @classmethod   
+    def fromJson(self, json_stream):
+        currency = Currency()
+        currency.__dict__.update(json.loads(json_stream))
+        ''' if '__A__' in o:
+     
+            a = A()
+     
+            a.__dict__.update(o['__A__'])
+     
+            return a
+     
+        elif '__datetime__' in o:
+     
+            return datetime.strptime(o['__datetime__'], '%Y-%m-%dT%H:%M:%S')        
+     
+        return o '''        
+        return currency
+            

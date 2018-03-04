@@ -4,7 +4,7 @@ Created on 26 feb. 2018
 @author: miglesias
 '''
 
-import Error
+from model.exception.Error import Error
 
 class BadRequestError(Error):
     """Exception raised for errors in a request.
@@ -15,8 +15,8 @@ class BadRequestError(Error):
     """
 
     def __init__(self, request, msg):
+        self(msg)
         self.request = request
-        self.msg = msg
         
     def toJSON(self):
         return {

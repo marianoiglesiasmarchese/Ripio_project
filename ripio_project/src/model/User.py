@@ -4,28 +4,43 @@ Created on 5 feb. 2018
 @author: miglesias
 '''
 
-from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, ForeignKey, Integer, String, Table, MetaData, ForeignKey
+from sqlalchemy.orm import relationship, backref
 from src.orm.BaseConnection import Base
 import json
+
 
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
     name = Column(String(50), unique=True)
     email = Column(String(120), unique=True)
-    accounts = relationship("Account", back_populates="user")
+  
+    accounts = relationship("Account", order_by="Account.id")
     
-    emited_transactions = relationship("Transaction", back_populates="origin_user")
+    emited_transactions = relationship("Transaction", foreign_keys="Transaction.origin_user_id", order_by="Transaction.id")
     
-    received_transactions  = relationship("Transaction", back_populates="target_user")
+    received_transactions  = relationship("Transaction", foreign_keys="Transaction.target_user_id", order_by="Transaction.id")
     
     def __init__(self, name=None, email=None):
         self.name = name
         self.email = email
 
+    def add_emited_transaction(self, transaction):
+        self.emited_transactions.append(transaction)
+
+    def add_received_transaction(self, transaction):
+        self.received_transactions.append(transaction)
+
     def get_balance_for_account(self, account):
         pass 
+    
+    def find_account_by_currency(self, currency):
+        result = None
+        for account in self.accounts:
+            if account.currency.simbol == currency.simbol: 
+                result = account
+        return result 
 
     def toJSON(self):
         return {
@@ -37,8 +52,8 @@ class User(Base):
     
     @classmethod   
     def fromJson(self, json_stream):
-        usr = User()
-        usr.__dict__.update(json.loads(json_stream))
+        user = User()
+        user.__dict__.update(json.loads(json_stream))
         ''' if '__A__' in o:
      
             a = A()
@@ -52,7 +67,7 @@ class User(Base):
             return datetime.strptime(o['__datetime__'], '%Y-%m-%dT%H:%M:%S')        
      
         return o '''        
-        return usr
+        return user
 
     def __eq__(self, other):
         """Overrides the default implementation"""

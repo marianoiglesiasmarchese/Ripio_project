@@ -5,7 +5,7 @@ Created on 5 feb. 2018
 '''
 
 import unittest
-from src.model.TransactionEngine import TransactionEngine
+from src.model.service import TransactionEngineService.TransactionEngine
 from src.model.User import User
 from pydblite.sqlite import Database, Table
 
@@ -13,7 +13,7 @@ class TestTransactionEngine(unittest.TestCase):
     
     def testEngine(self):
         self.sqlite()
-        transactionEngine = TransactionEngine(self)
+        transactionEngine = TransactionEngineService(self)
         monto = 10
         usuario1 = User(self)
         usuario2 = User(self)
