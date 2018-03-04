@@ -1,4 +1,4 @@
-import { Currency } from './currency';
+import { Currency } from './currency.model';
 
 export class Operation {
     id: String;
@@ -7,4 +7,3 @@ export class Operation {
     date: Date;
     currency: Currency;
   }
-  
