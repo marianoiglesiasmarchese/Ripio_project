@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { MatCardModule } from '@angular/material';
+import { MediaMatcher } from '@angular/cdk/layout';
 
-import { User } from './model/user.model';
+import { MatSidenav } from '@angular/material';
 
 import { UserService } from './service/user.service';
-
 
 @Component({
   selector: 'app-root',
@@ -17,14 +16,29 @@ import { UserService } from './service/user.service';
   ]
 })
 
-export class AppComponent implements OnInit {
+export class AppComponent {
 
-  public users: User[];
+//  constructor(public route: ActivatedRoute, public location: Location) { }
 
-  constructor(public route: ActivatedRoute, public location: Location, private userService: UserService) { }
 
-  ngOnInit() {
-    this.userService.getUsers().then(users => this.users = users);
+
+  mobileQuery: MediaQueryList;
+  title = 'P.E.P.';
+  version = '2.0';
+
+  fillerNav = Array(50).fill(0).map((_, i) => `Nav Item ${i + 1}`);
+
+  private _mobileQueryListener: () => void;
+
+  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public route: ActivatedRoute) {
+    this.mobileQuery = media.matchMedia('(max-width: 600px)');
+    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+    this.mobileQuery.addListener(this._mobileQueryListener);
+  }
+
+  // tslint:disable-next-line:use-life-cycle-interface
+  ngOnDestroy(): void {
+  this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
 }

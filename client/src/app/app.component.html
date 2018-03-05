@@ -1,21 +1,77 @@
-<mat-card>Simple card <!--
-  <mat-card-header>
-    <div mat-card-avatar class="example-header-image"></div>
-    <mat-card-title>Shiba Inu</mat-card-title>
-    <mat-card-subtitle>Dog Breed</mat-card-subtitle>
-  </mat-card-header>
-  <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
-  <mat-card-content>
-    <p>
-      The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
-      A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
-      bred for hunting.
-    </p>
-  </mat-card-content>
-  <mat-card-actions>
-    <button mat-button>LIKE</button>
-    <button mat-button>SHARE</button>
-  </mat-card-actions> -->
-</mat-card>
+<!--
+  <nav>
+    <a routerLink="/app">Heroes</a>
+  </nav>
 
-<div *ngFor='let user of users'> {{user.name}} </div>
+  <router-outlet></router-outlet>
+-->
+
+<div class="menu-container" [class.menu-is-mobile]="mobileQuery.matches" >
+
+    <nav class="nav-menu dark-primary-color">
+     <div class="container-fluid" >
+         <div class="navbar-header" >
+            <button class="navbar-left" mat-icon-button (click)="snav.toggle()" ><mat-icon class="burger" >menu</mat-icon></button>
+            <a class="navbar-brand" routerLink="/users" id="header-title">{{title}}</a>
+         </div>
+         <ul class="nav navbar-nav navbar-right">
+            <li><span class="usuario secondary-text-color" ><span class="icono glyphicon glyphicon-user"></span> NOMBRE DE USUARIO </span>
+                <a class="sesion primary-text-color" routerLink="/"   ><span class="glyphicon glyphicon-log-in"></span> Cerrar Sesion</a></li>
+            <li><a class="sesion" routerLink="/" ><span class="glyphicon glyphicon-home"></span>  Inicio</a></li>
+            <li><a class="sesion" routerLink="/" ><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+          </ul>
+      </div>
+    </nav>
+
+    <mat-sidenav-container class="menu-sidenav-container"
+                           [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+      <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
+                   [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+
+  <mat-accordion >
+
+    <mat-nav-list>
+      <mat-list-item routerLink="/">Procesos en Ejecucion</mat-list-item>
+   </mat-nav-list>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+          Administrar Procesos
+      </mat-expansion-panel-header>
+      <mat-nav-list>
+          <mat-list-item routerLink="/">Mis Procesos</mat-list-item>
+          <mat-list-item routerLink="/">Nuevo Proceso</mat-list-item>
+          <mat-list-item routerLink="/">Procesos Iniciados</mat-list-item>
+        </mat-nav-list>
+    </mat-expansion-panel>
+
+
+    <mat-expansion-panel >
+        <mat-expansion-panel-header>
+            Administrar Usuarios
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+            <mat-list-item routerLink="/">Grupos</mat-list-item>
+            <mat-list-item routerLink="/">Usuarios</mat-list-item>
+         </mat-nav-list>
+       </mat-expansion-panel>
+  </mat-accordion>
+
+      </mat-sidenav>
+
+      <mat-sidenav-content>
+
+          <h3>app page</h3>
+     <!--
+        <app-loader></app-loader>
+
+       <app-alert></app-alert>
+     -->
+     <div >
+        <router-outlet>
+        </router-outlet>
+<!--div class="body-divisor"> </div-->
+     </div>
+    </mat-sidenav-content>
+    </mat-sidenav-container>
+  </div>
