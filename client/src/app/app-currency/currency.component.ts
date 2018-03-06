@@ -9,47 +9,45 @@ import {
   MatFormFieldModule
   } from '@angular/material';
 
-import { Account } from '../model/account.model';
-import { Currency } from '../model/currency.model';
 import { User } from '../model/user.model';
+import { Currency } from '../model/currency.model';
 
-import { UserService } from '../service/user.service';
 import { CurrencyService } from '../service/currency.service';
 
 @Component({
-  selector: 'app-user',
-  templateUrl: './user.component.html',
-  styleUrls: ['./user.component.css']
+  selector: 'app-currency',
+  templateUrl: './currency.component.html',
+  styleUrls: ['./currency.component.css']
 })
 
-export class UserComponent implements OnInit {
+export class CurrencyComponent implements OnInit {
 
   public currencies: Currency[];
 
-  public user = new User();
-
-  nameFormControl = new FormControl('',  Validators.required);
+  public currency = new Currency();
+/*
   emailFormControl = new FormControl('', [
     Validators.required,
     Validators.email
-  ]);
+  ]); */
+
+  nameFormControl = new FormControl('',  Validators.required);
+  symbolFormControl = new FormControl('',  Validators.required);
 
   form = new FormGroup({
     'name': this.nameFormControl,
-    'symbol': this.emailFormControl,
+    'symbol': this.symbolFormControl,
   });
 
   constructor(
     public route: ActivatedRoute,
     public location: Location,
-    private userService: UserService,
     private currencyService: CurrencyService
   ) {}
 
   ngOnInit() {
     this.currencyService.getCurrencies().then(
-      currencies => (this.currencies = currencies
-      )
+      currencies => (this.currencies = currencies)
     );
   }
 
@@ -61,9 +59,9 @@ export class UserComponent implements OnInit {
     return this.form.valid;
   }
 
-  createUser() {
+  createCurrency() {
     if (this.validateForm()) {
-      this.userService.saveUser(this.user).then();
+      this.currencyService.saveCurrency(this.currency).then();
     }
   }
 

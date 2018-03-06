@@ -1,0 +1,43 @@
+<mat-card>
+
+    <mat-card-header>
+      <!--<div mat-card-avatar class="example-header-image"></div> -->
+      <mat-card-title>Currency</mat-card-title>
+      <mat-card-subtitle>Form for admin currencies</mat-card-subtitle>
+    </mat-card-header>
+    <!--  <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
+    <mat-card-content>
+    <!--  <p>
+        The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
+        A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
+        bred for hunting.
+      </p>
+    -->
+    <div class="example-container">
+
+      <mat-form-field>
+        <input matInput name="name" placeholder="Name" maxlength="250" [(ngModel)]="currency && currency.name"
+        [formControl]="nameFormControl">
+        <mat-error *ngIf="nameFormControl.hasError('required')">
+          Ingrese un nombre
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput name="symbol" placeholder="Symbol" maxlength="3" [(ngModel)]="currency && currency.symbol"
+      [formControl]="symbolFormControl">
+      <mat-error *ngIf="symbolFormControl.hasError('required')">
+        Ingrese un simbolo
+      </mat-error>
+  </mat-form-field>
+
+</div>
+
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button (click)="createCurrency()">Save</button>
+      <button mat-raised-button>Cancel</button>
+    </mat-card-actions>
+
+  </mat-card>

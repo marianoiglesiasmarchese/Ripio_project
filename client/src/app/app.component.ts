@@ -6,13 +6,15 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { MatSidenav } from '@angular/material';
 
 import { UserService } from './service/user.service';
+import { CurrencyService } from './service/currency.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   providers: [
-    UserService
+    UserService,
+    CurrencyService
   ]
 })
 
@@ -23,8 +25,7 @@ export class AppComponent {
 
 
   mobileQuery: MediaQueryList;
-  title = 'P.E.P.';
-  version = '2.0';
+  title = 'App';
 
   fillerNav = Array(50).fill(0).map((_, i) => `Nav Item ${i + 1}`);
 

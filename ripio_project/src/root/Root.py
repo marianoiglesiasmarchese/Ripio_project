@@ -15,6 +15,7 @@ from model.Account import Account
 from root.HttpStatus import HttpStatus
 from model.exception.BadRequestError import BadRequestError
 from src.model.service import TransactionEngineService
+from pony.orm.dbapiprovider import IntegrityError
 
 app = Flask("__name__")
 app.config['DEBUG'] = True
@@ -27,20 +28,18 @@ db = db_session
 def shutdown_session(exception=None ):
     db.remove()
     
-
-@app.route("/")
+@app.route("/ripio_app/")
 def root():
-    # return "Hello, World!"
-    return json.JSONEncoder().encode({"currency": ["peso", "dollar"]}) 
+    return "Ripio transactional project" 
 
-@app.route("/user/<user_id>")
+@app.route("/ripio_app/users/<user_id>")
 def find_user(user_id):
     #logger.info('finding user')
     user = db.query(User).filter(User.id == user_id).first() 
     return jsonify(user.toJSON())
 
-@app.route("/users")
-def find_all_users():
+@app.route("/ripio_app/users")
+def get_all_users():
 
     userListResult = [] 
     
@@ -52,23 +51,32 @@ def find_all_users():
     
     return jsonify(userListResult)
 
-@app.route('/currencies', methods=['POST'])
-def create_currency():
+@app.route("/ripio_app/users", methods=['POST'])
+def create_user():
+
     """Registers the user."""
     response = None
-    
-    if not request.form['currency']:
+        
+    if not request.json:
         exception = BadRequestError("","")
-        response = Response(jsonify(exception), status=HttpStatus.HTTP_BAD_REQUEST, mimetype='application/json')
+        response = 'exception'
     else:
-        new_currency = Currency()
-        db.add(new_currency)
-        db.commit()
-        response = Response(jsonify(new_currency), status=HttpStatus.HTTP_OK_BASIC, mimetype='application/json')
-    return response  
+        try:
+            new_user = User(request.json['name'], request.json['email'])
+            
+            # TODO > faltan cosas del usuario
+            
+            db.add(new_user)
+            db.commit()
+            response = new_user.toJSON()
+        except Exception as err:
+            db.rollback()            
+            # print(err.msg)
+            response = 'exception'
+    return jsonify(response ) 
   
-@app.route('/user/<user_id>/accounts', methods=['POST'])
-def create_account_for_user(user_id):
+@app.route('/ripio_app/users/<user_id>/accounts', methods=['GET'])
+def find_all_user_accounts(user_id):
     """Registers the user."""
     response = None
     
@@ -82,9 +90,25 @@ def create_account_for_user(user_id):
         db.commit()
         response = Response(jsonify(new_currency), status=HttpStatus.HTTP_OK_BASIC, mimetype='application/json')
     return response   
+
+@app.route('/ripio_app/users/<user_id>/accounts', methods=['POST'])
+def create_user_account(user_id):
+    """Registers the user."""
+    response = None
+    
+    if not request.form['account'] or not request.form['currency'] :
+        exception = BadRequestError("","")
+        response = Response(jsonify(exception), status=HttpStatus.HTTP_BAD_REQUEST, mimetype='application/json')
+    else:
+        ''' crear una cuenta para un usuario en particular y de un tipo particular '''
+        new_currency = Account()
+        db.add(new_currency)
+        db.commit()
+        response = Response(jsonify(new_currency), status=HttpStatus.HTTP_OK_BASIC, mimetype='application/json')
+    return response  
   
 ''' TODO >  posiblemente deba cambiar el rest'''
-@app.route("/user/<origin_id>/do_transaction_to/<target_id>")
+@app.route("/ripio_app/users/<origin_id>/do_transaction_to/<target_id>")
 def do_transaction(origin_id,target_id):
      
     if not request.form['operation'] :
@@ -107,12 +131,48 @@ def do_transaction(origin_id,target_id):
         response = Response(jsonify(exception), status=HttpStatus.HTTP_OK_BASIC, mimetype='application/json')
   
     return response
-  
+
+@app.route('/ripio_app/currencies', methods=['POST'])
+def create_currency():
+    
+    """Registers the user."""
+    response = None
+        
+    if not request.json:
+        exception = BadRequestError("","")
+        response = jsonify(exception)
+    else:
+        try:
+            new_currency = Currency(request.json['name'], request.json['symbol'])
+            db.add(new_currency)
+            db.commit()
+            response = new_currency.toJSON()
+        except Exception as err:
+            db.rollback()            
+            # print(err.msg)
+            response = 'exceptio'
+    return jsonify(response ) 
+    
+@app.route('/ripio_app/currencies', methods=['GET'])
+def get_all_currencies():
+    
+    currenciesListResult = [] 
+        
+    #logger.info('finding user')
+    currenciesList = db.query(Currency).all()
+        
+    for currency in currenciesList:
+        currenciesListResult.append(currency.toJSON())
+        
+    return jsonify(currenciesListResult)
+          
     
 def init_db_and_populate():
     """Creates the database tables."""
     init_db()
     
+    
+    ''' TODO > aca deberia realizar una migracion para contar con datos ! '''
     currency = Currency('peso', '$')
     
     account = Account(currency)
@@ -134,13 +194,6 @@ def init_db_and_populate():
 
     db.add(user2)
     db.commit() 
-
-    
-  #  db.delete(u1)  # Deleting the department also deletes all of its employees.
-  #  db.commit()
-    
-    #print db.query(User).all()
-
     
     print('Initialized the database.')
     

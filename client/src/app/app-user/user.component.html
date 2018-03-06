@@ -2,8 +2,8 @@
 
     <mat-card-header>
       <!--<div mat-card-avatar class="example-header-image"></div> -->
-      <mat-card-title>Transaction</mat-card-title>
-      <mat-card-subtitle>From origin to target user in the same currency</mat-card-subtitle>
+      <mat-card-title>User</mat-card-title>
+      <mat-card-subtitle>Form for admin users</mat-card-subtitle>
     </mat-card-header>
     <!--  <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
     <mat-card-content>
@@ -13,23 +13,41 @@
         bred for hunting.
       </p>
     -->
-        <mat-select placeholder="Origin user">
-          <mat-option>None</mat-option>
-          <mat-option *ngFor='let user of users' [value]="user.id" >
-            {{user.name}}
-          </mat-option>
-        </mat-select>
 
-        <mat-select placeholder="Target user">
-            <mat-option>None</mat-option>
-            <mat-option *ngFor='let user of users' [value]="user.id" >
-              {{user.name}}
-            </mat-option>
-        </mat-select>
+    <div class="example-container">
+
+        <mat-form-field>
+          <input matInput name="name" placeholder="Name" maxlength="250" [(ngModel)]="user && user.name"
+          [formControl]="nameFormControl">
+          <mat-error *ngIf="nameFormControl.hasError('required')">
+            Ingrese un nombre
+          </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput name="email" placeholder="Email" maxlength="250" [(ngModel)]="user && user.email"
+        [formControl]="emailFormControl">
+        <mat-error *ngIf="emailFormControl.hasError('required')">
+          Ingrese un email
+        </mat-error>
+    </mat-form-field>
+
+
+      <mat-form-field>
+        <mat-select placeholder="Currency">
+          <mat-option>None</mat-option>
+          <mat-option *ngFor='let currency of currencies' [value]="currency.id" >
+            {{currency.name}} - {{currency.symbol}}
+          </mat-option>
+      </mat-select>
+      </mat-form-field>
+    </div>
+
+
     </mat-card-content>
 
     <mat-card-actions>
-      <button mat-raised-button>Do transaction</button>
+      <button mat-raised-button (click)="createUser()">Save</button>
       <button mat-raised-button>Cancel</button>
     </mat-card-actions>
 

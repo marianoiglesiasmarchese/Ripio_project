@@ -23,6 +23,13 @@ class Currency(Base):
         self.name = name
         self.symbol = symbol
         
+    def toJSON(self):
+        return {
+            'id': self.id, 
+            'name': self.name,
+            'symbol': self.symbol,
+            }        
+        
     @classmethod   
     def fromJson(self, json_stream):
         currency = Currency()

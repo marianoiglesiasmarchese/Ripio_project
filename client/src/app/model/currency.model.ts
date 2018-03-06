@@ -3,4 +3,3 @@ export class Currency {
     name: String;
     symbol: String;
   }
-  

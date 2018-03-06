@@ -12,6 +12,7 @@ class Transaction(Base):
     __tablename__ = 'transactions'
     id = Column(Integer, primary_key=True)
     
+    ''' creo que estas dos deberian ser bidireccionales '''
     origin_user_id = Column(Integer, ForeignKey('users.id'))
     
     target_user_id = Column(Integer, ForeignKey('users.id'))
