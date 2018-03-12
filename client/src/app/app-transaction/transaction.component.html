@@ -1,51 +1,106 @@
-<mat-card>
+<mat-card  >
 
-    <mat-card-header>
-      <!--<div mat-card-avatar class="example-header-image"></div> -->
-      <mat-card-title>Transaction</mat-card-title>
-      <mat-card-subtitle>From origin to target user in the same currency</mat-card-subtitle>
-    </mat-card-header>
-    <!--  <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
-    <mat-card-content>
-    <!--  <p>
-        The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
-        A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
-        bred for hunting.
-      </p>
-    -->
-        <mat-select placeholder="Origin user">
-          <mat-option>None</mat-option>
-          <mat-option *ngFor='let user of users' [value]="user.id" (onSelectionChange)="findOriginUserAccounts(user)">
-            {{user.name}}
-          </mat-option>
-        </mat-select>
+  <mat-card-header>
+    <!--<div mat-card-avatar class="example-header-image"></div> -->
+    <mat-card-title>Transaction</mat-card-title>
+    <mat-card-subtitle>From origin to target user in the same currency</mat-card-subtitle>
+  </mat-card-header>
+  <!--  <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
+  <mat-card-content  >
 
-        <mat-select placeholder="Origin user account">
-          <mat-option>None</mat-option>
-          <mat-option *ngFor='let originAccount of originAccounts' [value]="originAccount.id">
-            {{originAccount.name}}
-          </mat-option>
-      </mat-select>
+    <form class="example-form">
+      <div class="example-container">
 
-      <mat-select placeholder="Target user">
-          <mat-option>None</mat-option>
-          <mat-option *ngFor='let user of users' [value]="user.id" (onSelectionChange)="findTargetUserAccounts(user)">
-            {{user.name}}
-          </mat-option>
-      </mat-select>
+        <p>
+          seleccione el usuario que origina la trnasaccion
+        </p>
 
-      <mat-select placeholder="Target user account">
-          <mat-option>None</mat-option>
-          <mat-option *ngFor='let targetAccount of targetAccounts' [value]="targetAccount.id" >
-            {{targetAccount.name}}
-          </mat-option>
-      </mat-select>
+        <mat-form-field>
+          <mat-select placeholder="Origin user" (valueChange)="findOriginUserAccounts($event)" name='origin_user' [formControl]='originUserFormControl'>
+            <mat-option>None</mat-option>
+            <mat-option *ngFor='let user of users' [value]="user">
+              {{user.name}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="originUserFormControl.hasError('required')">
+            Seleccione un usuario origen de la transferencia
+          </mat-error>
+        </mat-form-field>
 
-    </mat-card-content>
+        <p>
+          seleccione cuenta de usuario origen
+        </p>
+        <mat-form-field>
+          <mat-select placeholder="Origin user account" (valueChange)="showAmount($event)" name='origin_account' [formControl]='originAccountFormControl'>
+            <mat-option>None</mat-option>
+            <mat-option *ngFor='let originAccount of originAccounts' [value]="originAccount">
+              Account in {{originAccount.currency.name}} - {{originAccount.currency.symbol}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="originAccountFormControl.hasError('required')">
+            Seleccione una cuenta origen de transferencia
+          </mat-error>
+        </mat-form-field>
 
-    <mat-card-actions>
-      <button mat-raised-button>Do transaction</button>
-      <button mat-raised-button>Cancel</button>
-    </mat-card-actions>
+        <p>
+          dinero disponible
+        </p>
 
-  </mat-card>
+        <mat-form-field>
+          <input id="available_amount" matInput placeholder="Amount" value="0.0" type="number">
+        </mat-form-field>
+
+        <p>
+          dinero transferido
+        </p>
+
+        <mat-form-field>
+          <input matInput name="transferency_amount" placeholder="Transferency amount" value="0.0" type="number" [formControl]='transferencyAmountFormControl'>
+          <mat-error *ngIf="transferencyAmountFormControl.hasError('required')">
+            Ingrese monto a transferir
+          </mat-error>
+        </mat-form-field>
+
+        <p>
+          seleccione el usuario destino de la trnasaccion
+        </p>
+
+        <mat-form-field>
+          <mat-select placeholder="Target user" (valueChange)="findTargetUserAccounts($event)" name='target_user' [formControl]='targetUserFormControl'>
+            <mat-option>None</mat-option>
+            <mat-option *ngFor='let user of users' [value]="user">
+              {{user.name}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="targetUserFormControl.hasError('required')">
+            Seleccione un usuario destino de la transferencia
+          </mat-error>
+        </mat-form-field>
+
+        <p>
+          seleccione cuenta destino de transaccion
+        </p>
+
+        <mat-form-field>
+          <mat-select placeholder="Target user account" name='target_account' [formControl]='targetAccountFormControl'>
+            <mat-option>None</mat-option>
+            <mat-option *ngFor='let targetAccount of targetAccounts' [value]="targetAccount.id">
+              Account in {{targetAccount.currency.name}} - {{targetAccount.currency.symbol}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="targetAccountFormControl.hasError('required')">
+            Seleccione una cuenta destino de transferencia
+          </mat-error>
+        </mat-form-field>
+
+      </div>
+      </form>
+
+  </mat-card-content>
+
+  <mat-card-actions >
+    <button mat-raised-button (click)='doTransaction()'>Do transaction</button>
+    <button mat-raised-button>Cancel</button>
+  </mat-card-actions>
+
+</mat-card>

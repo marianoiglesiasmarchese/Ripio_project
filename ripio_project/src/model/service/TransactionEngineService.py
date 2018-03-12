@@ -10,16 +10,18 @@ from src.orm.BaseConnection import db_session
 
 db = db_session
 
-class TransactionEngine(object):
+class TransactionEngineService(object):
 
 
-    def __init__(self, params):
+    def __init__(self):
         '''
         Constructor
         '''
         
  
     def do_transaction(self, origin, target, operation):
+        
+        response = None
         
         try:            
         
@@ -35,10 +37,18 @@ class TransactionEngine(object):
 
             db.commit()
          
+            return transaction.toJson()
+         
         except DecreaceAmountError as err:
             db.rollback()            
             print(err.msg)
+            response = 'exception'
             # raise -> permite indicar que una Exception siga
-
+        except Exception as err:
+            db.rollback()            
+            # print(err.msg)
+            response = 'exception'            
         finally:
             pass
+        
+        return response

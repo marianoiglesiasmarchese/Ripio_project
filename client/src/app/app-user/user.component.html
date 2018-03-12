@@ -14,8 +14,8 @@
       </p>
     -->
 
+    <form class="example-form">
     <div class="example-container">
-
         <mat-form-field>
           <input matInput name="name" placeholder="Name" maxlength="250" [(ngModel)]="user && user.name"
           [formControl]="nameFormControl">
@@ -41,8 +41,9 @@
           </mat-option>
       </mat-select>
       </mat-form-field>
-    </div>
 
+    </div>
+    </form>
 
     </mat-card-content>
 

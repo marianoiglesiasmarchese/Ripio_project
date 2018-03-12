@@ -14,7 +14,7 @@ from model.Currency import Currency
 from model.Account import Account
 from root.HttpStatus import HttpStatus
 from model.exception.BadRequestError import BadRequestError
-from src.model.service import TransactionEngineService
+from src.model.service.TransactionEngineService import TransactionEngineService 
 from pony.orm.dbapiprovider import IntegrityError
 
 app = Flask("__name__")
@@ -77,19 +77,16 @@ def create_user():
   
 @app.route('/ripio_app/users/<user_id>/accounts', methods=['GET'])
 def find_all_user_accounts(user_id):
-    """Registers the user."""
-    response = None
     
-    if not request.form['account'] or not request.form['currency'] :
-        exception = BadRequestError("","")
-        response = Response(jsonify(exception), status=HttpStatus.HTTP_BAD_REQUEST, mimetype='application/json')
-    else:
-        ''' crear una cuenta para un usuario en particular y de un tipo particular '''
-        new_currency = Account()
-        db.add(new_currency)
-        db.commit()
-        response = Response(jsonify(new_currency), status=HttpStatus.HTTP_OK_BASIC, mimetype='application/json')
-    return response   
+    accountListResult = [] 
+    
+    #logger.info('finding user')
+    user = db.query(User).filter(User.id == user_id).first() 
+    
+    for account in user.accounts:
+        accountListResult.append(account.toJSON())
+    
+    return jsonify(accountListResult)  
 
 @app.route('/ripio_app/users/<user_id>/accounts', methods=['POST'])
 def create_user_account(user_id):
@@ -108,29 +105,33 @@ def create_user_account(user_id):
     return response  
   
 ''' TODO >  posiblemente deba cambiar el rest'''
-@app.route("/ripio_app/users/<origin_id>/do_transaction_to/<target_id>")
+@app.route("/ripio_app/users/<origin_id>/do_transaction_to/<target_id>", methods=['POST'] )
 def do_transaction(origin_id,target_id):
      
-    if not request.form['operation'] :
+    response = None
         
+    if not request.json:
         exception = BadRequestError("","")
-        response = Response(jsonify(exception), status=HttpStatus.HTTP_BAD_REQUEST, mimetype='application/json')
-        #logger.info('finding user')
-    
+        response = 'exception'
     else:
-        
-        origin = db.query(User).filter(User.id == origin_id).first() 
-        target = db.query(User).filter(User.id == target_id).first() 
-        
-        operation = Operation.fromJson(request.form['operation']) 
-        
-        ''' TODO > # aca deberia haber una injeccion de dependencia '''
-        transaction_service = TransactionEngineService()
-        transaction_service.do_transaction(origin, target, operation)
-        
-        response = Response(jsonify(exception), status=HttpStatus.HTTP_OK_BASIC, mimetype='application/json')
-  
-    return response
+        try:
+            origin = db.query(User).filter(User.id == origin_id).first() 
+            target = db.query(User).filter(User.id == target_id).first() 
+            
+            currency = Currency.fromJson(request.json['currency']);
+            
+            operation = Operation(request.json['amount'], request.json['type'], request.json['date'], currency) 
+            
+            ''' TODO > # aca deberia haber una injeccion de dependencia '''
+            transaction_service = TransactionEngineService()
+            
+            response = transaction_service.do_transaction(origin, target, operation)
+        except Exception as err:
+            db.rollback()            
+            # print(err.msg)
+            response = 'exception'
+    return jsonify(response) 
+
 
 @app.route('/ripio_app/currencies', methods=['POST'])
 def create_currency():
@@ -150,7 +151,7 @@ def create_currency():
         except Exception as err:
             db.rollback()            
             # print(err.msg)
-            response = 'exceptio'
+            response = 'exception'
     return jsonify(response ) 
     
 @app.route('/ripio_app/currencies', methods=['GET'])
@@ -176,6 +177,7 @@ def init_db_and_populate():
     currency = Currency('peso', '$')
     
     account = Account(currency)
+    account.amount = 100.5
     
     user1 = User('admin', 'admin@localhost')
     
@@ -187,6 +189,7 @@ def init_db_and_populate():
     currencyUSD = Currency('dollar', 'USD')
     
     accountUSD = Account(currencyUSD)
+    accountUSD.amount = 50
     
     user2 = User('adminYankee', 'adminYankee@localhost')
     

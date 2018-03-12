@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Headers, RequestOptions } from '@angular/http';
 import { HttpClient } from '@angular/common/http';
-import { User } from '..//model/user.model';
 import 'rxjs/add/operator/toPromise';
+
+import { User } from '..//model/user.model';
+import { Account } from '../model/account.model';
+import { Operation } from '../model/operation.model';
 
 @Injectable()
 export class UserService {
@@ -44,7 +47,18 @@ export class UserService {
     const userOid: String = user.id;
     return this.http.get(`${this.userUrl}/${userOid}/accounts`)
          .toPromise()
-         .then(response => response as Account[])
+         .then(
+           response => response as Account[]
+          )
+         .catch(this.handleError);
+  }
+
+  doTransaction(origin, target: User, operation: Operation): Promise<any> {
+    const originOid: String = origin.id;
+    const targetOid: String = target.id;
+    return this.http.post(`${this.userUrl}/${originOid}/do_transaction_to/${targetOid}`, operation)
+         .toPromise()
+         .then(response => response)
          .catch(this.handleError);
   }
 

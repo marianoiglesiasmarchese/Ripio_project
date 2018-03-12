@@ -33,7 +33,7 @@ class Currency(Base):
     @classmethod   
     def fromJson(self, json_stream):
         currency = Currency()
-        currency.__dict__.update(json.loads(json_stream))
+        currency.__dict__.update(json_stream)
         ''' if '__A__' in o:
      
             a = A()

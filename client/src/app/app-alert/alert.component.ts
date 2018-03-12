@@ -1,0 +1,29 @@
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { AlertService } from '../service/alert.service';
+
+@Component({
+   selector: 'app-alert',
+   templateUrl: 'alert.component.html',
+   styleUrls: ['./alert.component.css']
+})
+
+export class AlertComponent implements OnInit {
+
+  message: any;
+
+  constructor(private alertService: AlertService, private cdr: ChangeDetectorRef) {}
+
+  ngOnInit() {
+    this.alertService.getMessage().subscribe(
+      message => {
+        this.message = message;
+        this.cdr.detectChanges();
+        }
+    );
+  }
+
+  close() {
+    this.message = '';
+  }
+
+}

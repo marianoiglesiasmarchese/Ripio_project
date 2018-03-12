@@ -42,6 +42,14 @@ class Account(Base):
         else:
             raise DecreaceAmountError("El monto que se intenta debebitar es demaciado grande")
         
+    def toJSON(self):
+        return {
+            'id': self.id, 
+            'name': self.name,
+            'amount': self.amount,
+            'currency': self.currency[0].toJSON()
+            }           
+        
     @classmethod   
     def fromJson(self, json_stream):
         account = Account()

@@ -14,6 +14,7 @@ import { CurrencyComponent } from './app-currency/currency.component';
 import { TransactionComponent } from './app-transaction/transaction.component';
 import { FooterComponent } from './app-footer/footer.component';
 import { PageNotFoundComponent } from './not-found.component';
+import { AlertComponent } from './app-alert/alert.component';
 
 import {
   MatCardModule,
@@ -29,6 +30,7 @@ import {
 
 import { UserService } from './service/user.service';
 import { CurrencyService } from './service/currency.service';
+import { AlertService } from './service/alert.service';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,8 @@ import { CurrencyService } from './service/currency.service';
     UserComponent,
     CurrencyComponent,
     TransactionComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,
@@ -59,6 +62,7 @@ import { CurrencyService } from './service/currency.service';
   providers: [
     UserService,
     CurrencyService,
+    AlertService,
     MediaMatcher
   ],
   bootstrap: [AppComponent]

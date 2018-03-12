@@ -21,8 +21,11 @@ class Operation(Base):
     
     transaction_id = Column(Integer, ForeignKey('transactions.id'))
 
-    def __init__(self, params):
-        pass
+    def __init__(self, amount=None, type=None, date=None, currency=None):
+        self.amount = amount
+        self.type = type
+        self.date = date
+        # self.currency = currency
     
     def get_currency(self):
         return self.currency

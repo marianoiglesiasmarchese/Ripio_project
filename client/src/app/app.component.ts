@@ -7,6 +7,7 @@ import { MatSidenav } from '@angular/material';
 
 import { UserService } from './service/user.service';
 import { CurrencyService } from './service/currency.service';
+import { AlertService } from './service/alert.service';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,8 @@ import { CurrencyService } from './service/currency.service';
   styleUrls: ['./app.component.css'],
   providers: [
     UserService,
-    CurrencyService
+    CurrencyService,
+    AlertService
   ]
 })
 
