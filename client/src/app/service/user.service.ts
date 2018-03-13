@@ -6,6 +6,7 @@ import 'rxjs/add/operator/toPromise';
 import { User } from '..//model/user.model';
 import { Account } from '../model/account.model';
 import { Operation } from '../model/operation.model';
+import { Transaction } from '../model/transaction.model';
 
 @Injectable()
 export class UserService {
@@ -53,12 +54,12 @@ export class UserService {
          .catch(this.handleError);
   }
 
-  doTransaction(origin, target: User, operation: Operation): Promise<any> {
+  doTransaction(origin, target: User, operation: Operation): Promise<Transaction> {
     const originOid: String = origin.id;
     const targetOid: String = target.id;
     return this.http.post(`${this.userUrl}/${originOid}/do_transaction_to/${targetOid}`, operation)
          .toPromise()
-         .then(response => response)
+         .then(response => response as Transaction)
          .catch(this.handleError);
   }
 

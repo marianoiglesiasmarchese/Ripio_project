@@ -84,7 +84,7 @@
         <mat-form-field>
           <mat-select placeholder="Target user account" name='target_account' [formControl]='targetAccountFormControl'>
             <mat-option>None</mat-option>
-            <mat-option *ngFor='let targetAccount of targetAccounts' [value]="targetAccount.id">
+            <mat-option *ngFor='let targetAccount of targetAccounts' [value]="targetAccount">
               Account in {{targetAccount.currency.name}} - {{targetAccount.currency.symbol}}
             </mat-option>
           </mat-select>

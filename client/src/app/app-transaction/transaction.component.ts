@@ -95,19 +95,27 @@ export class TransactionComponent implements OnInit {
       if ( transferency_amount > 0 ) {
 
         const origin_account = this.form.get('origin_account').value as Account ;
+        const target_account = this.form.get('target_account').value as Account ;
 
-        if ( origin_account.amount > 0 && transferency_amount <= origin_account.amount ) {
-          var operation = new Operation();
-          operation.amount = transferency_amount;
-          operation.type = OperationType.credit;
-          operation.currency = origin_account.currency;
-          operation.date = new Date(Date.now());
+        if ( origin_account.amount > 0 && transferency_amount <= origin_account.amount  ) {
 
-          const origin_user = this.form.get('origin_user').value as User;
-          const target_user = this.form.get('target_user').value as User;
+          if ( origin_account.currency.id === target_account.currency.id ) {
 
-          // realiza la transferencia
-          this.userService.doTransaction(origin_user, target_user, operation).then();
+            var operation = new Operation();
+            operation.amount = transferency_amount;
+            operation.type = OperationType.credit;
+            operation.currency_id = origin_account.currency.id;
+            operation.date = new Date(Date.now());
+
+            const origin_user = this.form.get('origin_user').value as User;
+            const target_user = this.form.get('target_user').value as User;
+
+            // realiza la transferencia
+            this.userService.doTransaction(origin_user, target_user, operation).then();
+
+          } else {
+            this.alertService.error('Las operaciones de transferencia solo pueden realizarce entre cuentas de igual moneda');
+          }
         } else {
           this.alertService.error('La cuenta no tiene fondos suficientes para realizar la operacion');
         }
