@@ -4,10 +4,12 @@ Created on 5 feb. 2018
 @author: miglesias
 '''
 
-from root import Root
-import unittest
 import json
-from model.User import User
+import unittest
+
+from ripio_project import app
+from ripio_project.model.User import User
+
 
 class TestRoot(unittest.TestCase):
 

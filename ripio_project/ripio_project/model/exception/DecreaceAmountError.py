@@ -4,7 +4,8 @@ Created on 28 feb. 2018
 @author: miglesias
 '''
 
-class MyClass(object):
+
+class DecreaceAmountError(object):
     '''
     classdocs
     '''

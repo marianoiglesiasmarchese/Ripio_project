@@ -4,6 +4,7 @@ Created on 24 feb. 2018
 @author: miglesias
 '''
 
+
 class HttpStatus(object):
     """Bunch of commonly used http statuses.
     More from:

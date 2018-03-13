@@ -4,7 +4,8 @@ Created on 26 feb. 2018
 @author: miglesias
 '''
 
-from model.exception.Error import Error
+from ripio_project.model.exception.Error import Error
+
 
 class BadRequestError(Error):
     """Exception raised for errors in a request.
@@ -20,7 +21,7 @@ class BadRequestError(Error):
         
     def toJSON(self):
         return {
-            'id': self.id, 
+            'id': self.id,
             'name': self.name,
             'email': self.email,
             }

@@ -5,9 +5,12 @@ Created on 5 feb. 2018
 '''
 
 import unittest
-from src.model.service import TransactionEngineService.TransactionEngine
-from src.model.User import User
+
 from pydblite.sqlite import Database, Table
+
+from ripio_project.model.User import User
+from ripio_project.model.service import TransactionEngineService
+
 
 class TestTransactionEngine(unittest.TestCase):
     
@@ -19,7 +22,6 @@ class TestTransactionEngine(unittest.TestCase):
         usuario2 = User(self)
         result = transactionEngine.realizarTransaccion(usuario1, usuario2, monto)
         self.assertEqual(result, True, "transaccion fallida")
-        
   
     # initialization logic for the test suite declared in the test module
     # code that is executed before all tests in one test run

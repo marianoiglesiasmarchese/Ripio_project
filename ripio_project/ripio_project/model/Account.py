@@ -4,12 +4,15 @@ Created on 21 feb. 2018
 @author: miglesias
 '''
 
+import json
+
 from sqlalchemy import Column, ForeignKey, Integer, String 
 from sqlalchemy.orm import relationship
-from src.orm.BaseConnection import Base
-import json
-from src.model.enum.OperationType import OperationType
-from model.exception import DecreaceAmountError
+
+from ripio_project.model.enum.OperationType import OperationType
+from ripio_project.model.exception import DecreaceAmountError
+from ripio_project.orm.BaseConnection import Base
+
 
 class Account(Base):
     __tablename__ = 'accounts'
@@ -17,15 +20,13 @@ class Account(Base):
     name = Column(String(50), unique=True)
     amount = Column(Integer)
 
-    currency = relationship("Currency", order_by="Currency.id")
+    currency = relationship("Currency", uselist=False, back_populates="account", order_by="Currency.id")
     
     user_id = Column(Integer, ForeignKey('users.id'))
 
     def __init__(self, currency):
         self.amount = 0
-        if self.currency == None:
-            self.currency = []
-        self.currency.append(currency)
+        self.currency = currency
         
     def apply_operation(self, operation):
         if operation.type == OperationType.CREDIT:
@@ -44,10 +45,10 @@ class Account(Base):
         
     def toJSON(self):
         return {
-            'id': self.id, 
+            'id': self.id,
             'name': self.name,
             'amount': self.amount,
-            'currency': self.currency[0].toJSON()
+            'currency': self.currency.toJSON()
             }           
         
     @classmethod   

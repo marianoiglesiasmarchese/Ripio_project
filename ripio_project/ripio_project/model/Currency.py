@@ -4,10 +4,13 @@ Created on 5 feb. 2018
 @author: miglesias
 '''
 
+import json
+
 from sqlalchemy import Column, ForeignKey, Integer, String 
 from sqlalchemy.orm import relationship
-from src.orm.BaseConnection import Base
-import json
+
+from ripio_project.orm.BaseConnection import Base
+
 
 class Currency(Base):
     __tablename__ = 'currencies'
@@ -16,8 +19,10 @@ class Currency(Base):
     symbol = Column(String(3), unique=True)
 
     account_id = Column(Integer, ForeignKey('accounts.id'))
+    account = relationship("Account", back_populates="currency")   
     
-    operation_id = Column(Integer, ForeignKey('operations.id'))
+  #  operation_id = Column(Integer, ForeignKey('operations.id'))
+  #  operation = relationship("Operation", back_populates="currency")
 
     def __init__(self, name=None, symbol=None):
         self.name = name
@@ -25,7 +30,7 @@ class Currency(Base):
         
     def toJSON(self):
         return {
-            'id': self.id, 
+            'id': self.id,
             'name': self.name,
             'symbol': self.symbol,
             }        

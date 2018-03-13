@@ -4,10 +4,12 @@ Created on 5 feb. 2018
 @author: miglesias
 '''
 
+import json
+
 from sqlalchemy import Column, ForeignKey, Integer, String, Table, MetaData, ForeignKey
 from sqlalchemy.orm import relationship, backref
-from src.orm.BaseConnection import Base
-import json
+
+from ripio_project.orm.BaseConnection import Base
 
 
 class User(Base):
@@ -18,9 +20,9 @@ class User(Base):
   
     accounts = relationship("Account", order_by="Account.id")
     
-    emited_transactions = relationship("Transaction", foreign_keys="Transaction.origin_user_id", order_by="Transaction.id")
+    emited_transactions = relationship("Transaction", back_populates="origin_user", foreign_keys="Transaction.origin_user_id", order_by="Transaction.id")
     
-    received_transactions  = relationship("Transaction", foreign_keys="Transaction.target_user_id", order_by="Transaction.id")
+    received_transactions = relationship("Transaction", back_populates="target_user", foreign_keys="Transaction.target_user_id", order_by="Transaction.id")
     
     def __init__(self, name=None, email=None):
         self.name = name
@@ -38,13 +40,13 @@ class User(Base):
     def find_account_by_currency(self, currency):
         result = None
         for account in self.accounts:
-            if account.currency.simbol == currency.simbol: 
+            if account.currency.symbol == currency.symbol: 
                 result = account
         return result 
 
     def toJSON(self):
         return {
-            'id': self.id, 
+            'id': self.id,
             'name': self.name,
             'email': self.email,
             }
@@ -81,5 +83,4 @@ class User(Base):
 
     def __repr__(self):
         return '<User %r>' % (self.name)
-
 
