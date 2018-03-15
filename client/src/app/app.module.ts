@@ -11,6 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { UserComponent } from './app-user/user.component';
 import { CurrencyComponent } from './app-currency/currency.component';
+import { AccountComponent } from './app-account/account.component';
 import { TransactionComponent } from './app-transaction/transaction.component';
 import { FooterComponent } from './app-footer/footer.component';
 import { PageNotFoundComponent } from './not-found.component';
@@ -38,6 +39,7 @@ import { AlertService } from './service/alert.service';
     FooterComponent,
     UserComponent,
     CurrencyComponent,
+    AccountComponent,
     TransactionComponent,
     PageNotFoundComponent,
     AlertComponent

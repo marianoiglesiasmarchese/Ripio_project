@@ -1,0 +1,63 @@
+<mat-card>
+
+  <mat-card-header>
+    <mat-card-title>Account</mat-card-title>
+    <mat-card-subtitle>Form for admin accounts</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <form class="example-form">
+      <div class="example-container">
+
+        <mat-form-field>
+          <input matInput name="name" placeholder="Name" maxlength="250" [(ngModel)]="account && account.name" [formControl]="nameFormControl">
+          <mat-error *ngIf="nameFormControl.hasError('required')">
+            Ingrese un nombre
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput name="amount" placeholder="Amount" maxlength="250" [(ngModel)]="account && account.amount" [formControl]="amountFormControl">
+          <mat-error *ngIf="amountFormControl.hasError('required')">
+            Ingrese un email
+          </mat-error>
+        </mat-form-field>
+
+
+        <mat-form-field>
+          <mat-select placeholder="User" name='user' [formControl]='userFormControl'>
+            <mat-option>None</mat-option>
+            <mat-option *ngFor='let user of users' [value]="user">
+              {{user.name}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="userFormControl.hasError('required')">
+            Seleccione el usuario para el que desea crear la cuenta
+          </mat-error>
+        </mat-form-field>
+
+
+        <mat-form-field>
+          <mat-select placeholder="Currency" name='currency' [(ngModel)]="account && account.currency" [formControl]='currencyFormControl'>
+            <mat-option>None</mat-option>
+            <mat-option *ngFor='let currency of currencies' [value]="currency" >
+              {{currency.name}} - {{currency.symbol}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="currencyFormControl.hasError('required')">
+              Seleccione la moneda de la cuenta que intenta crear
+            </mat-error>
+        </mat-form-field>
+
+      </div>
+    </form>
+
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-raised-button (click)="createAccount()">Save</button>
+    <button mat-raised-button>Cancel</button>
+  </mat-card-actions>
+
+</mat-card>

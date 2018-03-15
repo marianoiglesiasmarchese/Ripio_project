@@ -54,6 +54,16 @@ export class UserService {
          .catch(this.handleError);
   }
 
+  saveAccount(user: User, account: Account): Promise<Account[]> {
+    const userOid: String = user.id;
+    return this.http.post(`${this.userUrl}/${userOid}/accounts`, account)
+         .toPromise()
+         .then(
+           response => response as Account[]
+          )
+         .catch(this.handleError);
+  }
+
   doTransaction(origin, target: User, operation: Operation): Promise<Transaction> {
     const originOid: String = origin.id;
     const targetOid: String = target.id;

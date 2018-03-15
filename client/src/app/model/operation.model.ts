@@ -5,5 +5,5 @@ export class Operation {
     amount: Number;
     type: String;
     date: Date;
-    currency_id: String;
+    currency: Currency;
   }

@@ -104,7 +104,7 @@ export class TransactionComponent implements OnInit {
             var operation = new Operation();
             operation.amount = transferency_amount;
             operation.type = OperationType.credit;
-            operation.currency_id = origin_account.currency.id;
+            operation.currency = origin_account.currency;
             operation.date = new Date(Date.now());
 
             const origin_user = this.form.get('origin_user').value as User;
