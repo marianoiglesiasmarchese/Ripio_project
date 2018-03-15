@@ -17,6 +17,6 @@ logger = logging.getLogger(__name__)
 
 db = db_session
 
-import ripio_project.controler.Root
+import ripio_project.controler.root
 import ripio_project.controler.currency 
 import ripio_project.controler.user

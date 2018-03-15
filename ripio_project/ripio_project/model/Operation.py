@@ -3,7 +3,6 @@ Created on 26 feb. 2018
 
 @author: miglesias
 '''
-import json
 
 from sqlalchemy import Column, ForeignKey, Integer, String, Date
 from sqlalchemy.orm import relationship 
@@ -19,43 +18,32 @@ class Operation(Base):
    #  ratio =  Column(Integer)
     type = Column(String(1))
     date = Column(Date)
-    currency_id = Column(Integer)
+    #currency_id = Column(Integer)
 
-    # currency = relationship("Currency", uselist=False, back_populates="operation", order_by="Currency.id")
+    currency_id = Column(Integer, ForeignKey('currencies.id'))
+    currency = relationship("Currency", uselist=False, back_populates="operation", order_by="Currency.id")
     
     transaction_id = Column(Integer, ForeignKey('transactions.id'))
     transaction = relationship("Transaction", back_populates="operation")
 
-    def __init__(self, amount=None, type=None, date=None, currency_id=None):
+    def __init__(self, amount=None, type=None, date=None, currency=None):
         self.amount = amount
         self.type = type
         self.date = date
-        self.currency_id = currency_id
-        
+        self.currency = currency
+                
     def toJSON(self):
         return {
             'id': self.id,
             'amount': self.amount,
             'type': self.type,
             'date': self.date,
-            'currency_id': self.currency_id,
+            'currency': self.currency.toJSON(),
             }          
         
     @classmethod   
     def fromJson(self, json_stream):
         operation = Operation()
-        operation.__dict__.update(json.loads(json_stream))
-        ''' if '__A__' in o:
-     
-            a = A()
-     
-            a.__dict__.update(o['__A__'])
-     
-            return a
-     
-        elif '__datetime__' in o:
-     
-            return datetime.strptime(o['__datetime__'], '%Y-%m-%dT%H:%M:%S')        
-     
-        return o '''        
+        operation.__dict__.update(json_stream)
+      
         return operation

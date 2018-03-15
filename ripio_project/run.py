@@ -18,8 +18,7 @@ def init_db_and_populate():
     ''' TODO > aca deberia realizar una migracion para contar con datos ! '''
     currency = Currency('peso', '$')
     
-    account = Account(currency)
-    account.amount = 100.5
+    account = Account(currency, 100, 'cuenta pesos')
     
     user1 = User('admin', 'admin@localhost')
     
@@ -30,8 +29,7 @@ def init_db_and_populate():
 
     currencyUSD = Currency('dollar', 'USD')
     
-    accountUSD = Account(currencyUSD)
-    accountUSD.amount = 50
+    accountUSD = Account(currencyUSD, 50, 'cuenta dolares')
     
     user2 = User('adminYankee', 'adminYankee@localhost')
     

@@ -3,10 +3,9 @@ Created on 5 feb. 2018
 
 @author: miglesias
 '''
-import json
 
-from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy import Column, ForeignKey, Integer
+from sqlalchemy.orm import relationship
 
 from ripio_project.orm.BaseConnection import Base
 
@@ -40,20 +39,8 @@ class Transaction(Base):
     @classmethod   
     def fromJson(self, json_stream):
         transaction = Transaction()
-        transaction.__dict__.update(json.loads(json_stream))
-        ''' if '__A__' in o:
-     
-            a = A()
-     
-            a.__dict__.update(o['__A__'])
-     
-            return a
-     
-        elif '__datetime__' in o:
-     
-            return datetime.strptime(o['__datetime__'], '%Y-%m-%dT%H:%M:%S')        
-     
-        return o '''        
+        transaction.__dict__.update(json_stream)
+       
         return transaction   
     
      

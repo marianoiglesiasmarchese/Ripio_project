@@ -4,8 +4,6 @@ Created on 21 feb. 2018
 @author: miglesias
 '''
 
-import json
-
 from sqlalchemy import Column, ForeignKey, Integer, String 
 from sqlalchemy.orm import relationship
 
@@ -20,13 +18,15 @@ class Account(Base):
     name = Column(String(50), unique=True)
     amount = Column(Integer)
 
+    currency_id = Column(Integer, ForeignKey('currencies.id'))
     currency = relationship("Currency", uselist=False, back_populates="account", order_by="Currency.id")
     
     user_id = Column(Integer, ForeignKey('users.id'))
 
-    def __init__(self, currency):
-        self.amount = 0
+    def __init__(self, currency, amount=0, name=None):
+        self.amount = amount
         self.currency = currency
+        self.name = name
         
     def apply_operation(self, operation):
         if operation.type == OperationType.CREDIT:
@@ -52,9 +52,8 @@ class Account(Base):
             }           
         
     @classmethod   
-    def fromJson(self, json_stream):
-        account = Account()
-        account.__dict__.update(json.loads(json_stream))
+    def fromJson(self, json_stream, currency):         
+        account = Account(currency, json_stream['amount'], json_stream['name'])
         
         return account
         

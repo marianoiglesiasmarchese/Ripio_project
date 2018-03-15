@@ -4,7 +4,6 @@ Created on 5 feb. 2018
 @author: miglesias
 '''
 
-import json
 import unittest
 
 from ripio_project import app
@@ -13,18 +12,28 @@ from ripio_project.model.User import User
 
 class TestRoot(unittest.TestCase):
 
-    def setUp(self):
-        print ""
-        # self.db_fd, self.app.config['DATABASE'] = tempfile.mkstemp()
-        # self.app.testing = True
-        # self.app = self.app.test_client()
-        # with self.app.app_context():
-        # self.init_db()
+    # initialization logic for the test suite declared in the test module
+    # code that is executed before all tests in one test run
+    @classmethod
+    def setUpClass(cls):
+        pass 
 
+    # clean up logic for the test suite declared in the test module
+    # code that is executed after all tests in one test run
+    @classmethod
+    def tearDownClass(cls):
+        pass 
+    
+    # initialization logic
+    # code that is executed before each test
+    def setUp(self):
+        pass 
+
+    # clean up logic
+    # code that is executed after each test
     def tearDown(self):
-        print ""
-        # os.close(self.db_fd)
-        # os.unlink(self.app.config['DATABASE'])
+        pass
+
 
     def test_root_path(self):
         client = Root.app.test_client()

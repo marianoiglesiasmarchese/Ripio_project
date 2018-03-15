@@ -14,7 +14,6 @@ from ripio_project.model.exception.BadRequestError import BadRequestError
 @app.route('/ripio_app/currencies', methods=['POST'])
 def create_currency():
     
-    """Registers the user."""
     response = None
         
     if not request.json:

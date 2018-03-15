@@ -4,12 +4,11 @@ Created on 12 mar. 2018
 @author: miglesias
 '''
 
-from flask import jsonify, request, Response
+from flask import jsonify, request
 
 from datetime import datetime
 
 from ripio_project import app, db
-from ripio_project.controler.HttpStatus import HttpStatus
 from ripio_project.model.Account import Account
 from ripio_project.model.Currency import Currency
 from ripio_project.model.Operation import Operation 
@@ -43,7 +42,6 @@ def get_all_users():
 @app.route("/ripio_app/users", methods=['POST'])
 def create_user():
 
-    """Registers the user."""
     response = None
         
     if not request.json:
@@ -81,22 +79,28 @@ def find_all_user_accounts(user_id):
 
 @app.route('/ripio_app/users/<user_id>/accounts', methods=['POST'])
 def create_user_account(user_id):
-    """Registers the user."""
-    response = None
     
-    if not request.form['account'] or not request.form['currency'] :
+    response = None
+        
+    if not request.json:
         exception = BadRequestError("", "")
-        response = Response(jsonify(exception), status=HttpStatus.HTTP_BAD_REQUEST, mimetype='application/json')
+        response = 'exception'
     else:
-        ''' crear una cuenta para un usuario en particular y de un tipo particular '''
-        new_currency = Account()
-        db.add(new_currency)
-        db.commit()
-        response = Response(jsonify(new_currency), status=HttpStatus.HTTP_OK_BASIC, mimetype='application/json')
-    return response  
-
-  
-''' TODO >  posiblemente deba cambiar el rest'''
+        try:
+            currency = db.query(Currency).filter(Currency.id == request.json['currency']['id']).first()
+            account = Account.fromJson(request.json, currency)
+            
+            user = db.query(User).filter(User.id == user_id).first()             
+            user.accounts.append(account)
+            
+            db.add(user)
+            db.commit()
+            response = account.toJSON()
+        except Exception as err:
+            db.rollback()            
+            # print(err.msg)
+            response = 'exception'
+    return jsonify(response) 
 
 
 @app.route("/ripio_app/users/<origin_id>/do_transaction_to/<target_id>", methods=['POST'])
@@ -112,13 +116,13 @@ def new_transaction(origin_id, target_id):
             origin = db.query(User).filter(User.id == origin_id).first() 
             target = db.query(User).filter(User.id == target_id).first() 
             
-            # currency = Currency.fromJson(request.json['currency']);
+            currency = db.query(Currency).filter(Currency.id == request.json['currency']['id']).first();
             
             
             operation_date = request.json['date']
             operation_date = datetime.strptime(operation_date, '%Y-%m-%dT%H:%M:%S.%fZ')
             
-            operation = Operation(request.json['amount'], request.json['type'], operation_date, request.json['currency_id']) 
+            operation = Operation(request.json['amount'], request.json['type'], operation_date, currency) 
             
             response = do_transaction(origin, target, operation)
         except Exception as err:
@@ -134,15 +138,13 @@ def do_transaction(origin, target, operation):
     
     try:            
     
-        transaction = Transaction(origin, target, operation)  # falta saber si parte de una operacion de suma o de resta
+        transaction = Transaction(origin, target, operation)  # falta saber si parte de una operacion de suma o de resta 
         
-        currency = db.query(Currency).filter(Currency.id == operation.currency_id).first() 
-        
-        origin_account = origin.find_account_by_currency(currency)
+        origin_account = origin.find_account_by_currency(operation.currency)
         origin.add_emited_transaction(transaction)
         origin_account.decreace_amount(operation.amount)
         
-        target_account = target.find_account_by_currency(currency)
+        target_account = target.find_account_by_currency(operation.currency)
         target.add_received_transaction(transaction)
         target_account.increace_amount(operation.amount)  # operacion opuesta      
 
