@@ -1,0 +1,14 @@
+#footer{
+  text-align:center;
+  z-index: 2;
+  position: fixed;
+  left: 0;
+  bottom: 0px;
+  width: 100%;
+  background-color: rgb(223, 219, 219);
+
+}
+
+.text-span{
+  color: #F88787; font-weight: bolder; font-size: 120%;
+}
