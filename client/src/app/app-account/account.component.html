@@ -20,7 +20,7 @@
         <mat-form-field>
           <input matInput name="amount" placeholder="Amount" maxlength="250" [(ngModel)]="account && account.amount" [formControl]="amountFormControl">
           <mat-error *ngIf="amountFormControl.hasError('required')">
-            Ingrese un email
+            Ingrese un monto
           </mat-error>
         </mat-form-field>
 
