@@ -13,14 +13,20 @@ import { AlertComponent } from './app-alert/alert.component';
 import { PageNotFoundComponent } from './not-found.component';
 import { FooterComponent } from './app-footer/footer.component';
 
-import { CurrencyComponent } from './app-currency/currency.component';
-import { AccountComponent } from './app-account/account.component';
-import { TransactionComponent } from './app-transaction/transaction.component';
-
 import { UserComponent } from './app-user/user.component';
-import { AddDialogComponent } from './app-user-dialog/app-add/add-dialog.component';
-import { EditDialogComponent } from './app-user-dialog/app-edit/edit-dialog.component';
-import { DeleteDialogComponent } from './app-user-dialog/app-delete/delete-dialog.component';
+import { AddUserDialogComponent } from './app-user-dialog/app-add/add-dialog.component';
+import { EditUserDialogComponent } from './app-user-dialog/app-edit/edit-dialog.component';
+import { DeleteUserDialogComponent } from './app-user-dialog/app-delete/delete-dialog.component';
+
+import { CurrencyComponent } from './app-currency/currency.component';
+/* import { AddCurrencyDialogComponent } from './app-user-dialog/app-add/add-dialog.component';
+import { EditCurrencyDialogComponent } from './app-user-dialog/app-edit/edit-dialog.component';
+import { DeleteCurrencyDialogComponent } from './app-user-dialog/app-delete/delete-dialog.component'; */
+
+
+import { AccountComponent } from './app-account/account.component';
+
+import { TransactionComponent } from './app-transaction/transaction.component';
 
 import {
   MatCardModule,
@@ -54,9 +60,12 @@ import { TableColumnUtils } from './service/table-column.service';
     TransactionComponent,
     PageNotFoundComponent,
     AlertComponent,
-    AddDialogComponent,
-    EditDialogComponent,
-    DeleteDialogComponent
+    AddUserDialogComponent,
+    EditUserDialogComponent,
+    DeleteUserDialogComponent,
+/*     AddCurrencyDialogComponent,
+    EditCurrencyDialogComponent,
+    DeleteCurrencyDialogComponent */
   ],
   imports: [
     BrowserModule,
@@ -88,9 +97,12 @@ import { TableColumnUtils } from './service/table-column.service';
     MediaMatcher
   ],
   entryComponents: [
-    AddDialogComponent,
-    EditDialogComponent,
-    DeleteDialogComponent
+    AddUserDialogComponent,
+    EditUserDialogComponent,
+    DeleteUserDialogComponent,
+  /*   AddCurrencyDialogComponent,
+    EditCurrencyDialogComponent,
+    DeleteCurrencyDialogComponent */
   ],
   bootstrap: [AppComponent]
 })

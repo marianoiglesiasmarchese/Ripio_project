@@ -11,11 +11,11 @@ import { User } from '../../model/user.model';
   styleUrls: ['./delete-dialog.component.css']
 })
 
-export class DeleteDialogComponent {
+export class DeleteUserDialogComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<DeleteDialogComponent>) {
+    public dialogRef: MatDialogRef<DeleteUserDialogComponent>) {
       console.log('received data in dialog: ' + data);
    }
 

@@ -15,7 +15,7 @@ import {
   styleUrls: ['./add-dialog.component.css']
 })
 
-export class AddDialogComponent {
+export class AddUserDialogComponent {
 
   nameFormControl = new FormControl('',  Validators.required);
   emailFormControl = new FormControl('', [
@@ -30,7 +30,7 @@ export class AddDialogComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<AddDialogComponent>) {
+    public dialogRef: MatDialogRef<AddUserDialogComponent>) {
       console.log('received data in dialog: ' + data);
    }
 

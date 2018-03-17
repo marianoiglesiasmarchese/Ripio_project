@@ -15,7 +15,7 @@ import {
   styleUrls: ['./edit-dialog.component.css']
 })
 
-export class EditDialogComponent {
+export class EditUserDialogComponent {
 
   nameFormControl = new FormControl('',  Validators.required);
   emailFormControl = new FormControl('', [
@@ -30,7 +30,7 @@ export class EditDialogComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<EditDialogComponent>) {
+    public dialogRef: MatDialogRef<EditUserDialogComponent>) {
       console.log('received data in dialog: ' + data);
    }
 

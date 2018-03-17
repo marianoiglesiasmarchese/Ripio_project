@@ -14,9 +14,9 @@ import { Account } from '../model/account.model';
 import { Currency } from '../model/currency.model';
 import { User } from '../model/user.model';
 
-import { AddDialogComponent } from '../app-user-dialog/app-add/add-dialog.component';
-import { EditDialogComponent } from '../app-user-dialog/app-edit/edit-dialog.component';
-import { DeleteDialogComponent } from '../app-user-dialog/app-delete/delete-dialog.component';
+import { AddUserDialogComponent } from '../app-user-dialog/app-add/add-dialog.component';
+import { EditUserDialogComponent } from '../app-user-dialog/app-edit/edit-dialog.component';
+import { DeleteUserDialogComponent } from '../app-user-dialog/app-delete/delete-dialog.component';
 
 import { UserService } from '../service/user.service';
 import { CurrencyService } from '../service/currency.service';
@@ -80,7 +80,7 @@ export class UserComponent implements OnInit, AfterViewInit {
   }
 
   addNew() {
-   const dialogRef = this.dialog.open(AddDialogComponent, {
+   const dialogRef = this.dialog.open(AddUserDialogComponent, {
       data: {title: 'user', user: this.user }
     });
 
@@ -97,7 +97,7 @@ export class UserComponent implements OnInit, AfterViewInit {
 
 
   startEdit(user: User) {
-    const dialogRef = this.dialog.open(EditDialogComponent, {
+    const dialogRef = this.dialog.open(EditUserDialogComponent, {
       data: {title: 'user', user: user }
     });
 
@@ -113,7 +113,7 @@ export class UserComponent implements OnInit, AfterViewInit {
   }
 
   deleteItem(user: User) {
-    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+    const dialogRef = this.dialog.open(DeleteUserDialogComponent, {
       data: {title: 'user', user: user }
     });
 
