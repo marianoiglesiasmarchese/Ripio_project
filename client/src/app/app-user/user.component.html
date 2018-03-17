@@ -1,39 +1,73 @@
-<mat-card>
+  <mat-toolbar >
+    <span>Users CRUD </span>
+    <span class="spacer"></span>
+  </mat-toolbar>
 
-    <mat-card-header>
-      <mat-card-title>User</mat-card-title>
-      <mat-card-subtitle>Form for admin users</mat-card-subtitle>
-    </mat-card-header>
+  <div class="container mat-elevation-z8">
 
-    <mat-card-content>
+    <div class="form">
 
-
-    <form class="example-form">
-    <div class="example-container">
-        <mat-form-field>
-          <input matInput name="name" placeholder="Name" maxlength="250" [(ngModel)]="user && user.name"
-          [formControl]="nameFormControl">
-          <mat-error *ngIf="nameFormControl.hasError('required')">
-            Ingrese un nombre
-          </mat-error>
+      <mat-form-field floatPlaceholder="never">
+        <input matInput #filter (keyup)="applyFilter($event.target.value)" placeholder="Filter">
       </mat-form-field>
 
-      <mat-form-field>
-        <input matInput name="email" placeholder="Email" maxlength="250" [(ngModel)]="user && user.email"
-        [formControl]="emailFormControl">
-        <mat-error *ngIf="emailFormControl.hasError('required')">
-          Ingrese un email
-        </mat-error>
-    </mat-form-field>
-
     </div>
-    </form>
 
-    </mat-card-content>
+    <mat-table #sorter class="mat-cell" [dataSource]="dataSource" matSort matSortActive="name" matSortDirection="asc" matSortDisableClear>
 
-    <mat-card-actions>
-      <button mat-raised-button (click)="createUser()">Save</button>
-      <button mat-raised-button>Cancel</button>
-    </mat-card-actions>
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.name}}</mat-cell>
+      </ng-container>
 
-  </mat-card>
+      <ng-container matColumnDef="email">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>email</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.email}}</mat-cell>
+      </ng-container>
+
+  <!--    <ng-container matColumnDef="created_at">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Created at</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.created_at}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="updated_at">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Updated at</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.updated_at}}</mat-cell>
+      </ng-container>
+    -->
+      <!-- actions -->
+
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>
+          <button mat-icon-button color="primary" (click)="addNew()">
+            <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+          </button>
+        </mat-header-cell>
+
+        <mat-cell *matCellDef="let row;">
+          <button mat-icon-button color="accent" (click)="startEdit(row)">
+            <mat-icon aria-label="Edit">edit</mat-icon>
+          </button>
+
+          <button mat-icon-button color="warn" (click)="deleteItem(row)">
+            <mat-icon aria-label="Delete">delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+
+    <mat-paginator #paginator
+        [length]="dataSource.filteredData.length"
+        [pageIndex]="0"
+        [pageSize]="10"
+        [pageSizeOptions]="[5, 10, 25, 100]">
+    </mat-paginator>
+
+    <div class="no-results" [style.display]="dataSource.data.length == 0 ? '' : 'none'">
+      No results
+    </div>
+
+  </div>

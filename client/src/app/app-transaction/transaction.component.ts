@@ -70,7 +70,7 @@ export class TransactionComponent implements OnInit {
 
   /* realizar transferencia entre cualquier tipo de cuenta y
   por medio de la cotizacion, realizar las operaciones de intercambio. */
-  findOriginUserAccounts(user: any) {
+  findOriginUserAccounts(user: User) {
     this.userService.getAccounts(user).then(
       accounts => (this.originAccounts = accounts)
     );

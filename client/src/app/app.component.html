@@ -1,7 +1,6 @@
 <div class="menu-container" [class.menu-is-mobile]="mobileQuery.matches">
 
-  <nav class="nav-menu dark-primary-color">
-    <div class="container-fluid">
+  <nav class="nav-menu">
 
       <div class="navbar-header">
         <button class="navbar-left" mat-icon-button (click)="snav.toggle()">
@@ -10,7 +9,6 @@
         <a class="navbar-brand" routerLink="/" id="header-title">{{title}}</a>
       </div>
 
-    </div>
   </nav>
 
   <mat-sidenav-container class="menu-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
@@ -38,9 +36,6 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
-
-
-      <h3>app page</h3>
 
       <app-alert></app-alert>
 

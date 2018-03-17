@@ -16,6 +16,9 @@ import { TransactionComponent } from './app-transaction/transaction.component';
 import { FooterComponent } from './app-footer/footer.component';
 import { PageNotFoundComponent } from './not-found.component';
 import { AlertComponent } from './app-alert/alert.component';
+import { AddDialogComponent } from './app-dialog/app-add/add-dialog.component';
+import { EditDialogComponent } from './app-dialog/app-edit/edit-dialog.component';
+import { DeleteDialogComponent } from './app-dialog/app-delete/delete-dialog.component';
 
 import {
   MatCardModule,
@@ -26,12 +29,18 @@ import {
   MatExpansionModule,
   MatListModule,
   MatFormFieldModule,
-  MatInputModule
+  MatInputModule,
+  MatSortModule,
+  MatTableModule,
+  MatToolbarModule,
+  MatPaginatorModule,
+  MatDialogModule
 } from '@angular/material';
 
 import { UserService } from './service/user.service';
 import { CurrencyService } from './service/currency.service';
 import { AlertService } from './service/alert.service';
+import { TableColumnUtils } from './service/table-column.service';
 
 @NgModule({
   declarations: [
@@ -42,7 +51,10 @@ import { AlertService } from './service/alert.service';
     AccountComponent,
     TransactionComponent,
     PageNotFoundComponent,
-    AlertComponent
+    AlertComponent,
+    AddDialogComponent,
+    EditDialogComponent,
+    DeleteDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -59,13 +71,24 @@ import { AlertService } from './service/alert.service';
     MatExpansionModule,
     MatListModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatSortModule,
+    MatTableModule,
+    MatToolbarModule,
+    MatPaginatorModule,
+    MatDialogModule
   ],
   providers: [
     UserService,
     CurrencyService,
     AlertService,
+    TableColumnUtils,
     MediaMatcher
+  ],
+  entryComponents: [
+    AddDialogComponent,
+    EditDialogComponent,
+    DeleteDialogComponent
   ],
   bootstrap: [AppComponent]
 })

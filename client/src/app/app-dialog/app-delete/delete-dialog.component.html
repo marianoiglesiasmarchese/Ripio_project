@@ -1,0 +1,27 @@
+<mat-dialog-content>
+
+  <div class="container">
+    <h3 mat-dialog-title>Are you sure ? </h3>
+
+      <form class="mat-dialog-content" >
+        <div class="example-container">
+
+          <mat-form-field color="accent">
+              <input matInput name="name" placeholder="Name" maxlength="250" [(ngModel)]="data.user && data.user.name" disabled>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput name="email" placeholder="Email" maxlength="250" [(ngModel)]="data.user && data.user.email" disabled>
+        </mat-form-field>
+
+        </div>
+      </form>
+
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions class="button-aligment">
+    <button mat-raised-button class="dark-primary-color text-primary-color" [mat-dialog-close]="data.user">Delete</button>
+    <button mat-raised-button class="dark-primary-color text-primary-color" (click)="onNoClick()" >Cancel</button>
+</mat-dialog-actions>

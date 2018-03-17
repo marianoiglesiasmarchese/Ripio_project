@@ -5,7 +5,7 @@ Created on 5 feb. 2018
 '''
 
 
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.orm import relationship
 
 from ripio_project.orm.BaseConnection import Base
@@ -16,6 +16,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), unique=True)
     email = Column(String(120), unique=True)
+    enable = Column(Boolean)
   
     accounts = relationship("Account", order_by="Account.id")
     
@@ -23,9 +24,10 @@ class User(Base):
     
     received_transactions = relationship("Transaction", back_populates="target_user", foreign_keys="Transaction.target_user_id", order_by="Transaction.id")
     
-    def __init__(self, name=None, email=None):
+    def __init__(self, name=None, email=None, enable=True):
         self.name = name
         self.email = email
+        self.enable = enable
 
     def add_emited_transaction(self, transaction):
         self.emited_transactions.append(transaction)
@@ -48,6 +50,7 @@ class User(Base):
             'id': self.id,
             'name': self.name,
             'email': self.email,
+            'enable': self.enable
             }
     
     @classmethod   

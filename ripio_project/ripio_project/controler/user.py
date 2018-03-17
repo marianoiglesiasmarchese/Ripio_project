@@ -18,27 +18,6 @@ from ripio_project.model.Transaction import Transaction
 from ripio_project.model.exception.DecreaceAmountError import DecreaceAmountError
 
 
-@app.route("/ripio_app/users/<user_id>")
-def find_user(user_id):
-    # logger.info('finding user')
-    user = db.query(User).filter(User.id == user_id).first() 
-    return jsonify(user.toJSON())
-
-
-@app.route("/ripio_app/users")
-def get_all_users():
-
-    userListResult = [] 
-    
-    # logger.info('finding user')
-    userList = db.query(User).all()
-    
-    for user in userList:
-        userListResult.append(user.toJSON())
-    
-    return jsonify(userListResult)
-
-
 @app.route("/ripio_app/users", methods=['POST'])
 def create_user():
 
@@ -62,9 +41,57 @@ def create_user():
             response = 'exception'
     return jsonify(response) 
 
+
+@app.route("/ripio_app/users/<user_id>", methods=['PUT'])
+def update_user(user_id):
+
+    response = None
+        
+    if not request.json:
+        exception = BadRequestError("", "")
+        response = 'exception'
+    else:
+        try:
+            user = db.query(User).filter(User.id == user_id).first() 
+            user.name = request.json['name']
+            user.email =  request.json['email']
+            user.enable =  request.json['enable']
+            #user.__dict__.update(request.json)
+            
+            #db.add(user)
+            db.commit()
+            response = user.toJSON()
+        except Exception as err:
+            db.rollback()            
+            # print(err.msg)
+            response = 'exception'
+    return jsonify(response) 
+
+
+@app.route("/ripio_app/users/<user_id>")
+def find(user_id):
+    # logger.info('finding user')
+    user = db.query(User).filter(User.id == user_id).first() 
+    return jsonify(user.toJSON())
+
+
+@app.route("/ripio_app/users")
+def get_all():
+
+    userListResult = [] 
+    
+    # logger.info('finding user')
+    #userList = db.query(User).all()
+    userList = db.query(User).filter(User.enable == 1).all()
+    
+    for user in userList:
+        userListResult.append(user.toJSON())
+    
+    return jsonify(userListResult)
+
   
 @app.route('/ripio_app/users/<user_id>/accounts', methods=['GET'])
-def find_all_user_accounts(user_id):
+def find_all_accounts(user_id):
     
     accountListResult = [] 
     
@@ -78,7 +105,7 @@ def find_all_user_accounts(user_id):
 
 
 @app.route('/ripio_app/users/<user_id>/accounts', methods=['POST'])
-def create_user_account(user_id):
+def create_account(user_id):
     
     response = None
         
@@ -165,3 +192,32 @@ def do_transaction(origin, target, operation):
         pass
     
     return response
+
+
+@app.route("/ripio_app/users/<user_id>/emited_transactions")
+def get_all_emited_transactions(user_id): 
+
+    emited_transactions_list_result = [] 
+    
+    user = db.query(User).filter(User.id == user_id).first() 
+    emited_transactions_list = user.emited_transactions
+    
+    for transaction in emited_transactions_list:
+        emited_transactions_list_result.append(transaction.toJSON())
+    
+    return jsonify(emited_transactions_list_result)
+
+
+@app.route("/ripio_app/users/<user_id>/received_transactions")
+def get_all_received_transactions(user_id): 
+
+    received_transactions_list_result = [] 
+    
+    user = db.query(User).filter(User.id == user_id).first() 
+    received_transactions_list = user.received_transactions
+    
+    for transaction in received_transactions_list:
+        received_transactions_list_result.append(transaction.toJSON())
+    
+    return jsonify(received_transactions_list_result)
+

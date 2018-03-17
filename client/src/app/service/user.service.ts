@@ -34,7 +34,6 @@ export class UserService {
           .toPromise()
           .then(response => response as User)
           .catch(this.handleError);
-
    }
 
   saveUser(user: User): Promise<User> {

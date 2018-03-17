@@ -8,6 +8,7 @@ import { MatSidenav } from '@angular/material';
 import { UserService } from './service/user.service';
 import { CurrencyService } from './service/currency.service';
 import { AlertService } from './service/alert.service';
+import { TableColumnUtils } from './service/table-column.service';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,8 @@ import { AlertService } from './service/alert.service';
   providers: [
     UserService,
     CurrencyService,
-    AlertService
+    AlertService,
+    TableColumnUtils
   ]
 })
 
