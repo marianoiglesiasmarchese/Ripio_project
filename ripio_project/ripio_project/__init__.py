@@ -1,5 +1,7 @@
 import json
+
 import logging
+from logging.handlers import RotatingFileHandler
 
 from flask import Flask, jsonify, request, Response, make_response
 
@@ -12,8 +14,6 @@ from ripio_project.orm.BaseConnection import db_session, init_db, engine
 
 app = Flask("__name__")
 app.config['DEBUG'] = True
-
-logger = logging.getLogger(__name__)
 
 db = db_session
 

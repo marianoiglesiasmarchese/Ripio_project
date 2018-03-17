@@ -16,40 +16,39 @@ from ripio_project.model.User import User
 from ripio_project.model.exception.BadRequestError import BadRequestError
 from ripio_project.model.Transaction import Transaction
 from ripio_project.model.exception.DecreaceAmountError import DecreaceAmountError
+from model.exception.Error import Error
 
 
 @app.route("/ripio_app/users", methods=['POST'])
 def create_user():
 
+    app.logger.info('creating a user')
     response = None
         
     if not request.json:
-        exception = BadRequestError("", "")
-        response = 'exception'
+        raise BadRequestError(request)
     else:
         try:
             new_user = User(request.json['name'], request.json['email'])
-            
-            # TODO > faltan cosas del usuario
             
             db.add(new_user)
             db.commit()
             response = new_user.toJSON()
         except Exception as err:
             db.rollback()            
-            # print(err.msg)
-            response = 'exception'
+            app.logger.error('An error occurred: {0}'.format(err.message))
+            raise Error(request=request)
     return jsonify(response) 
 
 
 @app.route("/ripio_app/users/<user_id>", methods=['PUT'])
 def update_user(user_id):
 
+    app.logger.info('updating a user')
     response = None
-        
+         
     if not request.json:
-        exception = BadRequestError("", "")
-        response = 'exception'
+        raise BadRequestError(request)
     else:
         try:
             user = db.query(User).filter(User.id == user_id).first() 
@@ -63,14 +62,16 @@ def update_user(user_id):
             response = user.toJSON()
         except Exception as err:
             db.rollback()            
-            # print(err.msg)
-            response = 'exception'
+            app.logger.error('An error occurred')
+            raise Error(request=request)
     return jsonify(response) 
 
 
 @app.route("/ripio_app/users/<user_id>")
 def find(user_id):
-    # logger.info('finding user')
+    
+    app.logger.info('getting a user')
+
     user = db.query(User).filter(User.id == user_id).first() 
     return jsonify(user.toJSON())
 
@@ -78,12 +79,11 @@ def find(user_id):
 @app.route("/ripio_app/users")
 def get_all():
 
+    app.logger.info('getting all users')
+
     userListResult = [] 
     
-    # logger.info('finding user')
-    #userList = db.query(User).all()
     userList = db.query(User).filter(User.enable == 1).all()
-    
     for user in userList:
         userListResult.append(user.toJSON())
     
@@ -93,9 +93,10 @@ def get_all():
 @app.route('/ripio_app/users/<user_id>/accounts', methods=['GET'])
 def find_all_accounts(user_id):
     
+    app.logger.info('getting all accounts for a user')
+    
     accountListResult = [] 
     
-    # logger.info('finding user')
     user = db.query(User).filter(User.id == user_id).first() 
     
     for account in user.accounts:
@@ -107,11 +108,12 @@ def find_all_accounts(user_id):
 @app.route('/ripio_app/users/<user_id>/accounts', methods=['POST'])
 def create_account(user_id):
     
+    app.logger.info('creating a account for a user')
+    
     response = None
         
     if not request.json:
-        exception = BadRequestError("", "")
-        response = 'exception'
+        raise BadRequestError(request)
     else:
         try:
             currency = db.query(Currency).filter(Currency.id == request.json['currency']['id']).first()
@@ -125,27 +127,27 @@ def create_account(user_id):
             response = account.toJSON()
         except Exception as err:
             db.rollback()            
-            # print(err.msg)
-            response = 'exception'
+            app.logger.error('An error occurred')
+            raise Error(request=request)
     return jsonify(response) 
 
 
 @app.route("/ripio_app/users/<origin_id>/do_transaction_to/<target_id>", methods=['POST'])
 def new_transaction(origin_id, target_id):
-     
+    
+    app.logger.info('creating a transaction fron user: {0} to: {1}'.format(origin_id, target_id))
+    
     response = None
         
     if not request.json:
-        exception = BadRequestError("", "")
-        response = 'exception'
+        raise BadRequestError(request)
     else:
         try:
             origin = db.query(User).filter(User.id == origin_id).first() 
             target = db.query(User).filter(User.id == target_id).first() 
             
             currency = db.query(Currency).filter(Currency.id == request.json['currency']['id']).first();
-            
-            
+                        
             operation_date = request.json['date']
             operation_date = datetime.strptime(operation_date, '%Y-%m-%dT%H:%M:%S.%fZ')
             
@@ -154,8 +156,8 @@ def new_transaction(origin_id, target_id):
             response = do_transaction(origin, target, operation)
         except Exception as err:
             db.rollback()            
-            # print(err.msg)
-            response = 'exception'
+            app.logger.error('An error occurred')
+            raise Error(request=request)
     return jsonify(response)
  
 
@@ -163,8 +165,7 @@ def do_transaction(origin, target, operation):
     
     response = None
     
-    try:            
-    
+    try:                
         transaction = Transaction(origin, target, operation)  # falta saber si parte de una operacion de suma o de resta 
         
         origin_account = origin.find_account_by_currency(operation.currency)
@@ -177,17 +178,15 @@ def do_transaction(origin, target, operation):
 
         db.commit()
      
-        return transaction.toJSON()
-     
+        return transaction.toJSON()     
     except DecreaceAmountError as err:
         db.rollback()            
-        print(err.msg)
-        response = 'exception'
-        # raise -> permite indicar que una Exception siga
+        app.logger.error('An error occurred')
+        raise DecreaceAmountError(operation)
     except Exception as err:
         db.rollback()            
-        # print(err.msg)
-        response = 'exception'            
+        app.logger.error('An error occurred')
+        raise Error()
     finally:
         pass
     
@@ -196,7 +195,9 @@ def do_transaction(origin, target, operation):
 
 @app.route("/ripio_app/users/<user_id>/emited_transactions")
 def get_all_emited_transactions(user_id): 
-
+    
+    app.logger.info('getting all emited transactions for a user')
+    
     emited_transactions_list_result = [] 
     
     user = db.query(User).filter(User.id == user_id).first() 
@@ -210,6 +211,8 @@ def get_all_emited_transactions(user_id):
 
 @app.route("/ripio_app/users/<user_id>/received_transactions")
 def get_all_received_transactions(user_id): 
+    
+    app.logger.info('getting all received transactions for a user')
 
     received_transactions_list_result = [] 
     

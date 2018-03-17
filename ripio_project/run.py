@@ -4,7 +4,7 @@ Created on 12 mar. 2018
 @author: miglesias
 '''
 
-from ripio_project import app, db 
+from ripio_project import app, db, logging, RotatingFileHandler
 from ripio_project.model.Account import Account 
 from ripio_project.model.Currency import Currency
 from ripio_project.model.User import User  
@@ -44,6 +44,10 @@ def init_db_and_populate():
 if __name__ == "__main__":
 
     init_db_and_populate()
+    
+    handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=1)
+    handler.setLevel(logging.INFO)
+    app.logger.addHandler(handler)
     
     app.run(use_reloader=False)    
     
