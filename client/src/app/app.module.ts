@@ -9,16 +9,18 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
-import { UserComponent } from './app-user/user.component';
+import { AlertComponent } from './app-alert/alert.component';
+import { PageNotFoundComponent } from './not-found.component';
+import { FooterComponent } from './app-footer/footer.component';
+
 import { CurrencyComponent } from './app-currency/currency.component';
 import { AccountComponent } from './app-account/account.component';
 import { TransactionComponent } from './app-transaction/transaction.component';
-import { FooterComponent } from './app-footer/footer.component';
-import { PageNotFoundComponent } from './not-found.component';
-import { AlertComponent } from './app-alert/alert.component';
-import { AddDialogComponent } from './app-dialog/app-add/add-dialog.component';
-import { EditDialogComponent } from './app-dialog/app-edit/edit-dialog.component';
-import { DeleteDialogComponent } from './app-dialog/app-delete/delete-dialog.component';
+
+import { UserComponent } from './app-user/user.component';
+import { AddDialogComponent } from './app-user-dialog/app-add/add-dialog.component';
+import { EditDialogComponent } from './app-user-dialog/app-edit/edit-dialog.component';
+import { DeleteDialogComponent } from './app-user-dialog/app-delete/delete-dialog.component';
 
 import {
   MatCardModule,

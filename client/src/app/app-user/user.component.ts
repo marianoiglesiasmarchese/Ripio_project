@@ -14,9 +14,9 @@ import { Account } from '../model/account.model';
 import { Currency } from '../model/currency.model';
 import { User } from '../model/user.model';
 
-import { AddDialogComponent } from '../app-dialog/app-add/add-dialog.component';
-import { EditDialogComponent } from '../app-dialog/app-edit/edit-dialog.component';
-import { DeleteDialogComponent } from '../app-dialog/app-delete/delete-dialog.component';
+import { AddDialogComponent } from '../app-user-dialog/app-add/add-dialog.component';
+import { EditDialogComponent } from '../app-user-dialog/app-edit/edit-dialog.component';
+import { DeleteDialogComponent } from '../app-user-dialog/app-delete/delete-dialog.component';
 
 import { UserService } from '../service/user.service';
 import { CurrencyService } from '../service/currency.service';
