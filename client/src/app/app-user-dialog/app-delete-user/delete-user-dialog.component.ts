@@ -6,9 +6,9 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatTableDataSource } from '@angular/mate
 import { User } from '../../model/user.model';
 
 @Component({
-  selector: 'app-delete-dialog',
-  templateUrl: './delete-dialog.component.html',
-  styleUrls: ['./delete-dialog.component.css']
+  selector: 'app-delete-user-dialog',
+  templateUrl: './delete-user-dialog.component.html',
+  styleUrls: ['./delete-user-dialog.component.css']
 })
 
 export class DeleteUserDialogComponent {

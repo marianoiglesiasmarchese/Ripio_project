@@ -10,13 +10,12 @@ import {
   MatDialog
   } from '@angular/material';
 
-import { Account } from '../model/account.model';
 import { Currency } from '../model/currency.model';
 import { User } from '../model/user.model';
 
-import { AddUserDialogComponent } from '../app-user-dialog/app-add/add-dialog.component';
-import { EditUserDialogComponent } from '../app-user-dialog/app-edit/edit-dialog.component';
-import { DeleteUserDialogComponent } from '../app-user-dialog/app-delete/delete-dialog.component';
+import { AddUserDialogComponent } from '../app-user-dialog/app-add-user/add-user-dialog.component';
+import { EditUserDialogComponent } from '../app-user-dialog/app-edit-user/edit-user-dialog.component';
+import { DeleteUserDialogComponent } from '../app-user-dialog/app-delete-user/delete-user-dialog.component';
 
 import { UserService } from '../service/user.service';
 import { CurrencyService } from '../service/currency.service';
@@ -46,9 +45,9 @@ export class UserComponent implements OnInit, AfterViewInit {
 
   constructor(
     public dialog: MatDialog,
+    private tableColumnUtils: TableColumnUtils,
     private userService: UserService,
-    private currencyService: CurrencyService,
-    private tableColumnUtils: TableColumnUtils
+    private currencyService: CurrencyService
   ) {
     this.dataSource = new MatTableDataSource<User>();
     this.dataSource.filterPredicate = this.tableColumnUtils.getFilterPerdicate(this.displayedColumns);

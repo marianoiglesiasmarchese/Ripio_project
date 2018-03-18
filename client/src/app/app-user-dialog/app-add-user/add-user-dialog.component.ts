@@ -10,12 +10,12 @@ import {
   } from '@angular/material';
 
 @Component({
-  selector: 'app-edit-dialog',
-  templateUrl: './edit-dialog.component.html',
-  styleUrls: ['./edit-dialog.component.css']
+  selector: 'app-add-user-dialog',
+  templateUrl: './add-user-dialog.component.html',
+  styleUrls: ['./add-user-dialog.component.css']
 })
 
-export class EditUserDialogComponent {
+export class AddUserDialogComponent {
 
   nameFormControl = new FormControl('',  Validators.required);
   emailFormControl = new FormControl('', [
@@ -30,7 +30,7 @@ export class EditUserDialogComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<EditUserDialogComponent>) {
+    public dialogRef: MatDialogRef<AddUserDialogComponent>) {
       console.log('received data in dialog: ' + data);
    }
 
