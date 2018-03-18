@@ -64,8 +64,8 @@ def get_all_currencies():
     app.logger.info('getting all currencies')    
     
     currenciesListResult = [] 
-        
-    currenciesList = db.query(Currency).all()
+            
+    currenciesList = db.query(Currency).filter(Currency.enable == 1).all()
         
     for currency in currenciesList:
         currenciesListResult.append(currency.toJSON())
