@@ -3,34 +3,31 @@ import { FormControl, Validators,  FormGroup } from '@angular/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatTableDataSource } from '@angular/material';
 
-import { User } from '../../model/user.model';
+import { Currency } from '../../model/currency.model';
 
 import {
   MatFormFieldModule
   } from '@angular/material';
 
 @Component({
-  selector: 'app-edit-dialog',
-  templateUrl: './edit-dialog.component.html',
-  styleUrls: ['./edit-dialog.component.css']
+  selector: 'app-currency-add-dialog',
+  templateUrl: './add-currency-dialog.component.html',
+  styleUrls: ['./add-currency-dialog.component.css']
 })
 
-export class EditUserDialogComponent {
+export class AddCurrencyDialogComponent {
 
   nameFormControl = new FormControl('',  Validators.required);
-  emailFormControl = new FormControl('', [
-    Validators.required,
-    Validators.email
-  ]);
+  symbolFormControl = new FormControl('',  Validators.required);
 
   form = new FormGroup({
     'name': this.nameFormControl,
-    'email': this.emailFormControl,
+    'symbol': this.symbolFormControl,
   });
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<EditUserDialogComponent>) {
+    public dialogRef: MatDialogRef<AddCurrencyDialogComponent>) {
       console.log('received data in dialog: ' + data);
    }
 

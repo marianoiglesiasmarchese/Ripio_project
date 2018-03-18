@@ -3,19 +3,19 @@ import { FormControl, Validators,  FormGroup } from '@angular/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatTableDataSource } from '@angular/material';
 
-import { User } from '../../model/user.model';
+import { Currency } from '../../model/currency.model';
 
 @Component({
-  selector: 'app-delete-dialog',
-  templateUrl: './delete-dialog.component.html',
-  styleUrls: ['./delete-dialog.component.css']
+  selector: 'app-delete-currency-dialog',
+  templateUrl: './delete-currency-dialog.component.html',
+  styleUrls: ['./delete-currency-dialog.component.css']
 })
 
-export class DeleteUserDialogComponent {
+export class DeleteCurrencyDialogComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<DeleteUserDialogComponent>) {
+    public dialogRef: MatDialogRef<DeleteCurrencyDialogComponent>) {
       console.log('received data in dialog: ' + data);
    }
 

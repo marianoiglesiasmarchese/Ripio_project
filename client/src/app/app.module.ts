@@ -16,14 +16,14 @@ import { PageNotFoundComponent } from './not-found.component';
 import { FooterComponent } from './app-footer/footer.component';
 
 import { UserComponent } from './app-user/user.component';
-import { AddUserDialogComponent } from './app-user-dialog/app-add/add-dialog.component';
-import { EditUserDialogComponent } from './app-user-dialog/app-edit/edit-dialog.component';
-import { DeleteUserDialogComponent } from './app-user-dialog/app-delete/delete-dialog.component';
+import { AddUserDialogComponent } from './app-user-dialog/app-add-user/add-user-dialog.component';
+import { EditUserDialogComponent } from './app-user-dialog/app-edit-user/edit-user-dialog.component';
+import { DeleteUserDialogComponent } from './app-user-dialog/app-delete-user/delete-user-dialog.component';
 
 import { CurrencyComponent } from './app-currency/currency.component';
-/* import { AddCurrencyDialogComponent } from './app-user-dialog/app-add/add-dialog.component';
-import { EditCurrencyDialogComponent } from './app-user-dialog/app-edit/edit-dialog.component';
-import { DeleteCurrencyDialogComponent } from './app-user-dialog/app-delete/delete-dialog.component'; */
+import { AddCurrencyDialogComponent } from './app-currency-dialog/app-add-currency/add-currency-dialog.component';
+import { EditCurrencyDialogComponent } from './app-currency-dialog/app-edit-currency/edit-currency-dialog.component';
+import { DeleteCurrencyDialogComponent } from './app-currency-dialog/app-delete-currency/delete-currency-dialog.component';
 
 
 import { AccountComponent } from './app-account/account.component';
@@ -70,9 +70,9 @@ import { LocalErrorHandler} from './error.handler';
     AddUserDialogComponent,
     EditUserDialogComponent,
     DeleteUserDialogComponent,
-/*     AddCurrencyDialogComponent,
+    AddCurrencyDialogComponent,
     EditCurrencyDialogComponent,
-    DeleteCurrencyDialogComponent */
+    DeleteCurrencyDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -114,9 +114,9 @@ import { LocalErrorHandler} from './error.handler';
     AddUserDialogComponent,
     EditUserDialogComponent,
     DeleteUserDialogComponent,
-  /*   AddCurrencyDialogComponent,
+    AddCurrencyDialogComponent,
     EditCurrencyDialogComponent,
-    DeleteCurrencyDialogComponent */
+    DeleteCurrencyDialogComponent
   ],
   bootstrap: [
     AppComponent,

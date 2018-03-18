@@ -1,13 +1,13 @@
 <mat-dialog-content>
 
   <div class="container">
-    <h3 mat-dialog-title>Add new {{data.title}}</h3>
+    <h3 mat-dialog-title>Edit {{data.title}}</h3>
 
       <form class="mat-dialog-content" >
       <div class="example-container">
 
           <mat-form-field color="accent">
-            <input matInput name="name" placeholder="Name" maxlength="250" [(ngModel)]="data.user && data.user.name"
+            <input matInput name="name" placeholder="Name" maxlength="250" [(ngModel)]="data.currency && data.currency.name"
             [formControl]="nameFormControl">
             <mat-error *ngIf="nameFormControl.hasError('required')">
               Ingrese un nombre
@@ -15,12 +15,11 @@
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput name="email" placeholder="Email" maxlength="250" [(ngModel)]="data.user && data.user.email"
-          [formControl]="emailFormControl">
-          <mat-error *ngIf="emailFormControl.hasError('required')">
-            Ingrese un email
+          <input matInput name="symbol" placeholder="Symbol" maxlength="3" [(ngModel)]="data.currency && data.currency.symbol" [formControl]="symbolFormControl">
+          <mat-error *ngIf="symbolFormControl.hasError('required')">
+            Ingrese un simbolo
           </mat-error>
-      </mat-form-field>
+        </mat-form-field>
 
       </div>
       </form>
@@ -30,6 +29,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions class="button-aligment">
-    <button mat-raised-button class="dark-primary-color text-primary-color" [disabled]="!validateForm()" [mat-dialog-close]="data.user">Save</button>
+    <button mat-raised-button class="dark-primary-color text-primary-color" [disabled]="!validateForm()" [mat-dialog-close]="data.currency">Edit</button>
     <button mat-raised-button class="dark-primary-color text-primary-color" (click)="onNoClick()" >Cancel</button>
 </mat-dialog-actions>

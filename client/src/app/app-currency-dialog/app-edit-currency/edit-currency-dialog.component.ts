@@ -10,27 +10,24 @@ import {
   } from '@angular/material';
 
 @Component({
-  selector: 'app-currency-add-dialog',
-  templateUrl: './add-currency-dialog.component.html',
-  styleUrls: ['./add-currency-dialog.component.css']
+  selector: 'app-edit-currency-dialog',
+  templateUrl: './edit-currency-dialog.component.html',
+  styleUrls: ['./edit-currency-dialog.component.css']
 })
 
-export class AddCurrencyDialogComponent {
+export class EditCurrencyDialogComponent {
 
   nameFormControl = new FormControl('',  Validators.required);
-  emailFormControl = new FormControl('', [
-    Validators.required,
-    Validators.email
-  ]);
+  symbolFormControl = new FormControl('',  Validators.required);
 
   form = new FormGroup({
     'name': this.nameFormControl,
-    'email': this.emailFormControl,
+    'symbol': this.symbolFormControl,
   });
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<AddCurrencyDialogComponent>) {
+    public dialogRef: MatDialogRef<EditCurrencyDialogComponent>) {
       console.log('received data in dialog: ' + data);
    }
 
