@@ -4,12 +4,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { ErrorHandler } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { AlertComponent } from './app-alert/alert.component';
+
+import { LoaderBarComponent } from './app-loader-bar/loader-bar.component';
 import { PageNotFoundComponent } from './not-found.component';
 import { FooterComponent } from './app-footer/footer.component';
 
@@ -42,13 +44,17 @@ import {
   MatTableModule,
   MatToolbarModule,
   MatPaginatorModule,
-  MatDialogModule
+  MatDialogModule,
+  MatProgressBarModule
 } from '@angular/material';
 
 import { UserService } from './service/user.service';
 import { CurrencyService } from './service/currency.service';
 import { AlertService } from './service/alert.service';
 import { TableColumnUtils } from './service/table-column.service';
+import { LoaderService } from './service/loader.service';
+
+import { LocalErrorHandler} from './error.handler';
 
 @NgModule({
   declarations: [
@@ -60,6 +66,7 @@ import { TableColumnUtils } from './service/table-column.service';
     TransactionComponent,
     PageNotFoundComponent,
     AlertComponent,
+    LoaderBarComponent,
     AddUserDialogComponent,
     EditUserDialogComponent,
     DeleteUserDialogComponent,
@@ -87,16 +94,23 @@ import { TableColumnUtils } from './service/table-column.service';
     MatTableModule,
     MatToolbarModule,
     MatPaginatorModule,
-    MatDialogModule
+    MatDialogModule,
+    MatProgressBarModule
   ],
   providers: [
     UserService,
     CurrencyService,
     AlertService,
     TableColumnUtils,
-    MediaMatcher
+    LoaderService,
+    MediaMatcher,
+    {
+      provide: ErrorHandler,
+      useClass: LocalErrorHandler
+    }
   ],
   entryComponents: [
+    LoaderBarComponent,
     AddUserDialogComponent,
     EditUserDialogComponent,
     DeleteUserDialogComponent,
@@ -104,6 +118,12 @@ import { TableColumnUtils } from './service/table-column.service';
     EditCurrencyDialogComponent,
     DeleteCurrencyDialogComponent */
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [
+    AppComponent,
+    LoaderBarComponent
+  ]
 })
-export class AppModule { }
+
+export class AppModule {
+
+}

@@ -1,9 +1,11 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { MediaMatcher } from '@angular/cdk/layout';
 
 import { MatSidenav } from '@angular/material';
+
+import { LoaderBarComponent } from './app-loader-bar/loader-bar.component';
 
 import { UserService } from './service/user.service';
 import { CurrencyService } from './service/currency.service';
@@ -22,13 +24,10 @@ import { TableColumnUtils } from './service/table-column.service';
   ]
 })
 
-export class AppComponent {
-
-//  constructor(public route: ActivatedRoute, public location: Location) { }
-
-
+export class AppComponent implements OnDestroy {
 
   mobileQuery: MediaQueryList;
+
   title = 'App';
 
   fillerNav = Array(50).fill(0).map((_, i) => `Nav Item ${i + 1}`);
@@ -41,9 +40,8 @@ export class AppComponent {
     this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
-  // tslint:disable-next-line:use-life-cycle-interface
   ngOnDestroy(): void {
-  this.mobileQuery.removeListener(this._mobileQueryListener);
+    this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
 }

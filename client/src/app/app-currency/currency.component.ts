@@ -9,7 +9,6 @@ import {
   MatFormFieldModule
   } from '@angular/material';
 
-import { User } from '../model/user.model';
 import { Currency } from '../model/currency.model';
 
 import { CurrencyService } from '../service/currency.service';
