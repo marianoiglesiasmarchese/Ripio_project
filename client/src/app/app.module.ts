@@ -25,8 +25,10 @@ import { AddCurrencyDialogComponent } from './app-currency-dialog/app-add-curren
 import { EditCurrencyDialogComponent } from './app-currency-dialog/app-edit-currency/edit-currency-dialog.component';
 import { DeleteCurrencyDialogComponent } from './app-currency-dialog/app-delete-currency/delete-currency-dialog.component';
 
-
 import { AccountComponent } from './app-account/account.component';
+import { AddAccountDialogComponent } from './app-account-dialog/app-add-account/add-account-dialog.component';
+import { EditAccountDialogComponent } from './app-account-dialog/app-edit-account/edit-account-dialog.component';
+import { DeleteAccountDialogComponent } from './app-account-dialog/app-delete-account/delete-account-dialog.component';
 
 import { TransactionComponent } from './app-transaction/transaction.component';
 
@@ -72,7 +74,10 @@ import { LocalErrorHandler} from './error.handler';
     DeleteUserDialogComponent,
     AddCurrencyDialogComponent,
     EditCurrencyDialogComponent,
-    DeleteCurrencyDialogComponent
+    DeleteCurrencyDialogComponent,
+    AddAccountDialogComponent,
+    EditAccountDialogComponent,
+    DeleteAccountDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -116,7 +121,10 @@ import { LocalErrorHandler} from './error.handler';
     DeleteUserDialogComponent,
     AddCurrencyDialogComponent,
     EditCurrencyDialogComponent,
-    DeleteCurrencyDialogComponent
+    DeleteCurrencyDialogComponent,
+    AddAccountDialogComponent,
+    EditAccountDialogComponent,
+    DeleteAccountDialogComponent
   ],
   bootstrap: [
     AppComponent,

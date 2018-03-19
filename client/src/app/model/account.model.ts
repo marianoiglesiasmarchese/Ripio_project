@@ -5,4 +5,5 @@ export class Account {
     name: String;
     amount: Number;
     currency: Currency;
+    enable: Boolean;
   }

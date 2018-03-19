@@ -4,7 +4,7 @@ Created on 21 feb. 2018
 @author: miglesias
 '''
 
-from sqlalchemy import Column, ForeignKey, Integer, String 
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean
 from sqlalchemy.orm import relationship
 
 from ripio_project.model.enum.OperationType import OperationType
@@ -17,16 +17,18 @@ class Account(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), unique=True)
     amount = Column(Integer)
+    enable = Column(Boolean)
 
     currency_id = Column(Integer, ForeignKey('currencies.id'))
     currency = relationship("Currency", uselist=False, back_populates="account", order_by="Currency.id")
     
     user_id = Column(Integer, ForeignKey('users.id'))
 
-    def __init__(self, currency, amount=0, name=None):
+    def __init__(self, currency, amount=0, name=None, enable=True):
         self.amount = amount
         self.currency = currency
         self.name = name
+        self.enable = enable
         
     def apply_operation(self, operation):
         if operation.type == OperationType.CREDIT:
@@ -48,7 +50,8 @@ class Account(Base):
             'id': self.id,
             'name': self.name,
             'amount': self.amount,
-            'currency': self.currency.toJSON()
+            'currency': self.currency.toJSON(),
+            'enable': self.enable
             }           
         
     @classmethod   

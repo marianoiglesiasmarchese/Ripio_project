@@ -1,63 +1,96 @@
-<mat-card>
+<mat-toolbar >
+  <span>Accounts for user </span>
+  <span class="spacer"></span>
+</mat-toolbar>
 
-  <mat-card-header>
-    <mat-card-title>Account</mat-card-title>
-    <mat-card-subtitle>Form for admin accounts</mat-card-subtitle>
-  </mat-card-header>
+<div class="container mat-elevation-z8">
 
-  <mat-card-content>
+  <form class="form">
+    <div class="example-container">
 
-    <form class="example-form">
-      <div class="example-container">
+      <mat-form-field>
+        <mat-select placeholder="User" name='user' [formControl]='userFormControl' (valueChange)="onUserSelect($event)" >
+          <mat-option>None</mat-option>
+          <mat-option *ngFor='let user of users' [value]="user">
+            {{user.name}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="userFormControl.hasError('required')">
+          Seleccione el usuario del que desea administrar las cuentas
+        </mat-error>
+      </mat-form-field>
 
-        <mat-form-field>
-          <input matInput name="name" placeholder="Name" maxlength="250" [(ngModel)]="account && account.name" [formControl]="nameFormControl">
-          <mat-error *ngIf="nameFormControl.hasError('required')">
-            Ingrese un nombre
-          </mat-error>
-        </mat-form-field>
+    </div>
+  </form>
 
-        <mat-form-field>
-          <input matInput name="amount" placeholder="Amount" maxlength="250" [(ngModel)]="account && account.amount" [formControl]="amountFormControl">
-          <mat-error *ngIf="amountFormControl.hasError('required')">
-            Ingrese un monto
-          </mat-error>
-        </mat-form-field>
+  <div class="form">
 
+    <mat-form-field floatPlaceholder="never">
+      <input matInput #filter (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
 
-        <mat-form-field>
-          <mat-select placeholder="User" name='user' [formControl]='userFormControl'>
-            <mat-option>None</mat-option>
-            <mat-option *ngFor='let user of users' [value]="user">
-              {{user.name}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="userFormControl.hasError('required')">
-            Seleccione el usuario para el que desea crear la cuenta
-          </mat-error>
-        </mat-form-field>
+  </div>
 
+  <mat-table #sorter class="mat-cell" [dataSource]="dataSource" matSort matSortActive="name" matSortDirection="asc" matSortDisableClear>
 
-        <mat-form-field>
-          <mat-select placeholder="Currency" name='currency' [(ngModel)]="account && account.currency" [formControl]='currencyFormControl'>
-            <mat-option>None</mat-option>
-            <mat-option *ngFor='let currency of currencies' [value]="currency" >
-              {{currency.name}} - {{currency.symbol}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="currencyFormControl.hasError('required')">
-              Seleccione la moneda de la cuenta que intenta crear
-            </mat-error>
-        </mat-form-field>
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.name}}</mat-cell>
+    </ng-container>
 
-      </div>
-    </form>
+    <ng-container matColumnDef="amount">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Amount</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.amount}}</mat-cell>
+    </ng-container>
 
-  </mat-card-content>
+    <ng-container matColumnDef="currency.name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Currency</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.currency.name}}</mat-cell>
+      </ng-container>
 
-  <mat-card-actions>
-    <button mat-raised-button (click)="createAccount()">Save</button>
-    <button mat-raised-button>Cancel</button>
-  </mat-card-actions>
+<!--    <ng-container matColumnDef="created_at">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Created at</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.created_at}}</mat-cell>
+    </ng-container>
 
-</mat-card>
+    <ng-container matColumnDef="updated_at">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Updated at</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.updated_at}}</mat-cell>
+    </ng-container>
+  -->
+    <!-- actions -->
+
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef [hidden]='!selectedUser'>
+        <button mat-icon-button color="primary" (click)="addNew()">
+          <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+        </button>
+      </mat-header-cell>
+
+      <mat-cell *matCellDef="let row;">
+        <button mat-icon-button color="accent" (click)="startEdit(row)">
+          <mat-icon aria-label="Edit">edit</mat-icon>
+        </button>
+
+        <button mat-icon-button color="warn" (click)="deleteItem(row)">
+          <mat-icon aria-label="Delete">delete</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+  <mat-paginator #paginator
+      [length]="dataSource.filteredData.length"
+      [pageIndex]="0"
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 25, 100]">
+  </mat-paginator>
+
+  <div class="no-results" [style.display]="dataSource.data.length == 0 ? '' : 'none'">
+    No results
+  </div>
+
+</div>

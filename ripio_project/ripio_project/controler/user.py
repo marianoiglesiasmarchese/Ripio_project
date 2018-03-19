@@ -100,7 +100,8 @@ def find_all_accounts(user_id):
     user = db.query(User).filter(User.id == user_id).first() 
     
     for account in user.accounts:
-        accountListResult.append(account.toJSON())
+        if account.enable:
+            accountListResult.append(account.toJSON())
     
     return jsonify(accountListResult)  
 
@@ -123,6 +124,31 @@ def create_account(user_id):
             user.accounts.append(account)
             
             db.add(user)
+            db.commit()
+            response = account.toJSON()
+        except Exception as err:
+            db.rollback()            
+            app.logger.error('An error occurred')
+            raise Error(request=request)
+    return jsonify(response) 
+
+
+@app.route('/ripio_app/users/<user_id>/accounts/<account_id>', methods=['PUT'])
+def update_account(user_id, account_id):
+    
+    app.logger.info('updating a account for a user')
+    
+    response = None
+        
+    if not request.json:
+        raise BadRequestError(request)
+    else:
+        try:
+            account = db.query(Account).filter(Account.id == account_id).first()
+            account.name = request.json['name']
+            account.amount = request.json['amount']
+            account.enable = request.json['enable']
+            
             db.commit()
             response = account.toJSON()
         except Exception as err:

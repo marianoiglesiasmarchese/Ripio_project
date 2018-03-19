@@ -1,0 +1,46 @@
+<mat-dialog-content>
+
+  <div class="container">
+    <h3 mat-dialog-title>Add new {{data.title}}</h3>
+
+    <form class="mat-dialog-content">
+      <div class="example-container">
+
+        <mat-form-field>
+          <input matInput name="name" placeholder="Name" maxlength="250" [(ngModel)]="data.account && data.account.name" [formControl]="nameFormControl">
+          <mat-error *ngIf="nameFormControl.hasError('required')">
+            Ingrese un nombre
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput name="amount" placeholder="Amount" maxlength="250" [(ngModel)]="data.account && data.account.amount" [formControl]="amountFormControl"
+            type="number" value="0.0" min="0.0">
+          <mat-error *ngIf="amountFormControl.hasError('required')">
+            Ingrese un monto
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select placeholder="Currency" name='currency' [(ngModel)]="data.account && data.account.currency" [formControl]='currencyFormControl'>
+            <mat-option>None</mat-option>
+            <mat-option *ngFor='let currency of currencies' [value]="currency">
+              {{currency.name}} - {{currency.symbol}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="currencyFormControl.hasError('required')">
+            Seleccione la moneda de la cuenta que intenta crear
+          </mat-error>
+        </mat-form-field>
+
+      </div>
+    </form>
+
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions class="button-aligment">
+  <button mat-raised-button class="dark-primary-color text-primary-color" [disabled]="!validateForm()" [mat-dialog-close]="data.account">Save</button>
+  <button mat-raised-button class="dark-primary-color text-primary-color" (click)="onNoClick()">Cancel</button>
+</mat-dialog-actions>

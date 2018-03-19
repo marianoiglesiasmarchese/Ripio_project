@@ -27,9 +27,10 @@ export class UserService {
          .catch(this.handleError);
   }
 
-  getUser(username: string): Promise<User> {
+  getUser(user: User): Promise<User> {
     this.loaderService.show();
-    return this.http.get(`${this.userUrl}/${username}`)
+    const userOid: String = user.id;
+    return this.http.get(`${this.userUrl}/${userOid}`)
          .toPromise()
          .then(response => {
           this.loaderService.hide();
@@ -78,7 +79,20 @@ export class UserService {
     const userOid: String = user.id;
     return this.http.post(`${this.userUrl}/${userOid}/accounts`, account)
          .toPromise()
-         .then(response =>{
+         .then(response => {
+            this.loaderService.hide();
+            return response as Account[];
+          })
+         .catch(this.handleError);
+  }
+
+  updateAccount(user: User, account: Account): Promise<Account[]> {
+    this.loaderService.show();
+    const userOid: String = user.id;
+    const accountOid: String = account.id;
+    return this.http.put(`${this.userUrl}/${userOid}/accounts/${accountOid}`, account)
+         .toPromise()
+         .then(response => {
             this.loaderService.hide();
             return response as Account[];
           })
