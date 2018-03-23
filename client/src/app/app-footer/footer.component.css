@@ -5,9 +5,13 @@
   left: 0;
   bottom: 0px;
   width: 100%;
-  background-color: rgb(223, 219, 219);
+  background-color: rgb(125, 200, 208);
+  vertical-align: middle;
+  padding: .5% .5%;
 }
 
 .text-span{
-  color: #F88787; font-weight: bolder; font-size: 120%;
+  color: rgb(255, 255, 255);
+  font-family: Roboto, HelveticaNeue, Arial, sans-serif;
+  font-size: 20px;
 }

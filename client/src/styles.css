@@ -25,6 +25,11 @@ example-container {
   float: right;
 }
 
+a {
+  text-decoration: none !important;
+  color: rgb(255, 255, 255);
+}
+
 /*
 
 @import '~@angular/material/theming';
