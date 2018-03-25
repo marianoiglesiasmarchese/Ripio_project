@@ -7,5 +7,5 @@ export class User {
     email: String;
     enable: Boolean;
     accounts: Account[];
-    emmited_transactions: Transaction[];
+    transactions: Transaction[];
   }

@@ -113,22 +113,10 @@ export class UserService {
          .catch(err => this.handleError(err));
   }
 
-  getEmitedTransactions(user: User): Promise<Transaction[]> {
+  getTransactions(user: User): Promise<Transaction[]> {
     this.loaderService.show();
     const userOid: String = user.id;
-    return this.http.get(`${this.userUrl}/${userOid}/emited_transactions`)
-         .toPromise()
-         .then(response => {
-            this.loaderService.hide();
-            return response as Transaction[];
-           })
-         .catch(err => this.handleError(err));
-  }
-
-  getReceivedTransactions(user: User): Promise<Transaction[]> {
-    this.loaderService.show();
-    const userOid: String = user.id;
-    return this.http.get(`${this.userUrl}/${userOid}/received_transactions`)
+    return this.http.get(`${this.userUrl}/${userOid}/transactions`)
          .toPromise()
          .then(response => {
             this.loaderService.hide();

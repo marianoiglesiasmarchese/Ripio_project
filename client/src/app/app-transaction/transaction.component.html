@@ -1,12 +1,9 @@
 <mat-toolbar>
-  <span>Transactions for user </span>
+  <span>Transactions for user account </span>
   <span class="spacer"></span>
 </mat-toolbar>
 
-
-
-<div class="container mat-elevation-z8">
-
+<div class=" mat-elevation-z8">
 
   <form class="form">
     <div class="example-container">
@@ -24,30 +21,30 @@
       </mat-form-field>
 
     </div>
+    <span style="float: right;">
+      <button mat-icon-button color="primary" [disabled]='!selectedUser' (click)="addNew()" >
+        <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+      </button>
+    </span>
+
   </form>
 
-  <mat-tab-group>
-    <mat-tab label="Emited transactions">
-
-  <button mat-icon-button color="primary" [disabled]='!selectedUser' (click)="addNew()" style="float: right;">
-    <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
-  </button>
-  <span class="spacer"></span>
+  <hr>
 
   <div class="form">
 
     <mat-form-field floatPlaceholder="never">
-      <input matInput #filter (keyup)="applyEmitedFilter($event.target.value)" placeholder="Filter">
+      <input matInput #filter (keyup)="applyFilter($event.target.value)" placeholder="Filter">
     </mat-form-field>
 
   </div>
 
-  <mat-table #sorter class="mat-cell" [dataSource]="dataSourceEmitedTransactions" matSort matSortActive="target_user.name"
+  <mat-table #sorter class="mat-cell" [dataSource]="dataSourceTransactions" matSort matSortActive="user.name"
     matSortDirection="asc" matSortDisableClear>
 
-    <ng-container matColumnDef="target_user.name">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Target user</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.target_user.name}}</mat-cell>
+    <ng-container matColumnDef="user.name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>User (Origin/Target)</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.user.name}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="operation.amount">
@@ -55,9 +52,9 @@
       <mat-cell *matCellDef="let row"> {{row.operation.amount}}</mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="operation.type">
+    <ng-container matColumnDef="type">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.operation.type}}</mat-cell>
+      <mat-cell *matCellDef="let row"> {{row.type}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="operation.currency.name">
@@ -82,79 +79,15 @@
     </ng-container>
   -->
 
-    <mat-header-row *matHeaderRowDef="displayedColumnsForEmitedTransactions"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumnsForEmitedTransactions;"></mat-row>
+    <mat-header-row *matHeaderRowDef="displayedColumnsTransactions"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumnsTransactions;"></mat-row>
   </mat-table>
 
-  <mat-paginator #paginator [length]="dataSourceEmitedTransactions.filteredData.length" [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+  <mat-paginator #paginator [length]="dataSourceTransactions.filteredData.length" [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
   </mat-paginator>
 
-  <div class="no-results" [style.display]="dataSourceEmitedTransactions.data.length == 0 ? '' : 'none'">
+  <div class="no-results" [style.display]="dataSourceTransactions.data.length == 0 ? '' : 'none'">
     No results
   </div>
-
-  </mat-tab>
-
-  <mat-tab label="Received transactions">
-
-  <div class="form">
-
-    <mat-form-field floatPlaceholder="never">
-      <input matInput #filter (keyup)="applyReceivedFilter($event.target.value)" placeholder="Filter">
-    </mat-form-field>
-
-  </div>
-
-  <mat-table #sorter class="mat-cell" [dataSource]="dataSourceReceivedTransactions" matSort matSortActive="origin_user.name"
-    matSortDirection="asc" matSortDisableClear>
-
-    <ng-container matColumnDef="origin_user.name">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Origin user</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.target_user.name}}</mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="operation.amount">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Amount</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.operation.amount}}</mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="operation.type">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.operation.type}}</mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="operation.currency.name">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Currency</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.operation.currency.name}}</mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="operation.currency.symbol">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Symbol</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.operation.currency.symbol}}</mat-cell>
-    </ng-container>
-
-    <!--    <ng-container matColumnDef="created_at">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Created at</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.created_at}}</mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="updated_at">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Updated at</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.updated_at}}</mat-cell>
-    </ng-container>
-  -->
-
-    <mat-header-row *matHeaderRowDef="displayedColumnsForReceivedTransactions"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumnsForReceivedTransactions;"></mat-row>
-  </mat-table>
-
-  <mat-paginator #paginator [length]="dataSourceReceivedTransactions.filteredData.length" [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
-  </mat-paginator>
-
-  <div class="no-results" [style.display]="dataSourceReceivedTransactions.data.length == 0 ? '' : 'none'">
-    No results
-  </div>
-</mat-tab>
-</mat-tab-group>
 
 </div>

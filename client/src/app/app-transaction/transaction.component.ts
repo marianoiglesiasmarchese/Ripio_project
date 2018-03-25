@@ -53,32 +53,18 @@ export class TransactionComponent implements OnInit, AfterViewInit {
     'user': this.userFormControl
   });
 
-  displayedColumnsForEmitedTransactions = [
-    'target_user.name',
+  displayedColumnsTransactions = [
+    'user.name',
     'operation.amount',
-    'operation.type',
+    'type',
     'operation.currency.name',
     'operation.currency.symbol'
   ];
 
-  dataSourceEmitedTransactions: MatTableDataSource<Transaction>;
+  dataSourceTransactions: MatTableDataSource<Transaction>;
 
-  @ViewChild('paginatorForEmitedTransactions', { read: MatPaginator }) paginatorForEmitedTransactions: MatPaginator;
-  @ViewChild('sorterForEmitedTransactions', { read: MatSort }) sorterForEmitedTransactions: MatSort;
-
-
-  displayedColumnsForReceivedTransactions = [
-    'origin_user.name',
-    'operation.amount',
-    'operation.type',
-    'operation.currency.name',
-    'operation.currency.symbol'
-  ];
-
-  dataSourceReceivedTransactions: MatTableDataSource<Transaction>;
-
-  @ViewChild('paginatorForReceivedTransactions', { read: MatPaginator }) paginatorForReceivedTransactions: MatPaginator;
-  @ViewChild('sorterForReceivedTransactions', { read: MatSort }) sorterForReceivedTransactions: MatSort;
+  @ViewChild('paginatorTransactions', { read: MatPaginator }) paginatorTransactions: MatPaginator;
+  @ViewChild('sorterTransactions', { read: MatSort }) sorterTransactions: MatSort;
 
   constructor(
 /*     private alertService: AlertService, */
@@ -86,23 +72,14 @@ export class TransactionComponent implements OnInit, AfterViewInit {
     public dialog: MatDialog,
     private userService: UserService
   ) {
-    this.dataSourceEmitedTransactions = new MatTableDataSource<Transaction>();
-    this.dataSourceEmitedTransactions.filterPredicate =
-      this.tableColumnUtils.getFilterPerdicate(this.displayedColumnsForEmitedTransactions);
-    this.dataSourceEmitedTransactions.sortingDataAccessor = this.tableColumnUtils.getSortingDataAccessor();
-
-    this.dataSourceReceivedTransactions = new MatTableDataSource<Transaction>();
-    this.dataSourceReceivedTransactions.filterPredicate =
-      this.tableColumnUtils.getFilterPerdicate(this.displayedColumnsForReceivedTransactions);
-    this.dataSourceReceivedTransactions.sortingDataAccessor = this.tableColumnUtils.getSortingDataAccessor();
+    this.dataSourceTransactions = new MatTableDataSource<Transaction>();
+    this.dataSourceTransactions.filterPredicate =
+      this.tableColumnUtils.getFilterPerdicate(this.displayedColumnsTransactions);
+    this.dataSourceTransactions.sortingDataAccessor = this.tableColumnUtils.getSortingDataAccessor();
   }
 
-  applyEmitedFilter(filterValue: string) {
-    this.dataSourceEmitedTransactions.filter = this.tableColumnUtils.normalizeFilter(filterValue);
-  }
-
-  applyReceivedFilter(filterValue: string) {
-    this.dataSourceReceivedTransactions.filter = this.tableColumnUtils.normalizeFilter(filterValue);
+  applyFilter(filterValue: string) {
+    this.dataSourceTransactions.filter = this.tableColumnUtils.normalizeFilter(filterValue);
   }
 
   ngOnInit() {
@@ -120,10 +97,8 @@ export class TransactionComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataSourceEmitedTransactions.sort = this.sorterForEmitedTransactions;
-    this.dataSourceEmitedTransactions.paginator = this.paginatorForEmitedTransactions;
-    this.dataSourceReceivedTransactions.sort = this.sorterForReceivedTransactions;
-    this.dataSourceReceivedTransactions.paginator = this.paginatorForReceivedTransactions;
+    this.dataSourceTransactions.sort = this.sorterTransactions;
+    this.dataSourceTransactions.paginator = this.paginatorTransactions;
   }
 
   onUserSelect(user: User) {
@@ -131,18 +106,14 @@ export class TransactionComponent implements OnInit, AfterViewInit {
     console.log(this.selectedUser);
     this.refresh();
     if (!user) {
-      this.dataSourceEmitedTransactions.data = [];
-      this.dataSourceReceivedTransactions.data = [];
+      this.dataSourceTransactions.data = [];
     }
   }
 
   refresh() {
     if (this.selectedUser) {
-      this.userService.getEmitedTransactions(this.selectedUser).then(transactions =>
-        this.dataSourceEmitedTransactions.data = transactions
-      );
-      this.userService.getReceivedTransactions(this.selectedUser).then(transactions =>
-        this.dataSourceReceivedTransactions.data = transactions
+      this.userService.getTransactions(this.selectedUser).then(transactions =>
+        this.dataSourceTransactions.data = transactions
       );
     }
   }

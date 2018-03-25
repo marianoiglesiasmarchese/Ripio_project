@@ -3,7 +3,7 @@ import { User } from './user.model';
 
 export class Transaction {
     id: String;
-    origin_user: User;
-    target_user: User;
+    user: User;
     operation: Operation;
+    type: String;
   }
