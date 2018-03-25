@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { AlertModule } from 'ngx-bootstrap/alert';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MediaMatcher } from '@angular/cdk/layout';
@@ -87,6 +88,7 @@ import { LocalErrorHandler} from './error.handler';
     DeleteTransactionDialogComponent
   ],
   imports: [
+    AlertModule.forRoot(),
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
