@@ -29,11 +29,10 @@ hr{
   border-color: #0097A7;
 }
 
-/* h2{
-  font-family: roboto;
-  text-rendering: optimizeLegibility;
-} */
-
+a {
+  text-decoration: none !important;
+  color: rgb(255, 255, 255);
+}
 
 /*
 
