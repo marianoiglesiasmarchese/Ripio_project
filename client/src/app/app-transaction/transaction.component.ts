@@ -1,62 +1,113 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { FormControl, Validators,  FormGroup } from '@angular/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import {
+/* import {
   MatCardModule,
   MatButtonModule,
   MatSelectModule
+  } from '@angular/material'; */
+
+import {
+  MatTableModule,
+  MatPaginator,
+  MatTableDataSource,
+  MatSort,
+  MatToolbarModule,
+  MatButtonModule,
+  MatDialog,
+  MatFormFieldModule,
+  MatSelectModule,
+  MatTabsModule
   } from '@angular/material';
 
 import { User } from '../model/user.model';
 import { Currency } from '../model/currency.model';
 import { Account } from '../model/account.model';
+import { Operation } from '../model/operation.model';
 import { OperationType } from '../model/enum/operation-type.model';
 
+import { AddTransactionDialogComponent } from '../app-transaction-dialog/app-add-transaction/add-transaction-dialog.component';
+/* import { EditTransactionDialogComponent } from '../app-transaction-dialog/app-edit-transaction/edit-transaction-dialog.component';
+import { DeleteTransactionDialogComponent } from '../app-transaction-dialog/app-delete-transaction/delete-transaction-dialog.component'; */
+
+import { TableColumnUtils } from '../service/table-column.service';
+import { AlertService } from '../service/alert.service';
 import { UserService } from '../service/user.service';
 import { CurrencyService } from '../service/currency.service';
-import { AlertService } from '../service/alert.service';
-import { Operation } from '../model/operation.model';
+import { Transaction } from '../model/transaction.model';
 
 @Component({
   selector: 'app-transaction',
   templateUrl: './transaction.component.html',
   styleUrls: ['./transaction.component.css']
 })
-export class TransactionComponent implements OnInit {
+export class TransactionComponent implements OnInit, AfterViewInit {
 
   public users: User[];
-  public originAccounts: Account[];
-  public targetAccounts: Account[];
+  public selectedUser: User;
 
-  originUserFormControl = new FormControl('',  Validators.required);
-  originAccountFormControl = new FormControl('',  Validators.required);
-  transferencyAmountFormControl = new FormControl('',  Validators.required);
-  targetUserFormControl = new FormControl('',  Validators.required);
-  targetAccountFormControl = new FormControl('',  Validators.required);
+  userFormControl = new FormControl('',  Validators.required);
 
   form = new FormGroup({
-    'origin_user': this.originUserFormControl,
-    'origin_account': this.originAccountFormControl,
-    'transferency_amount': this.transferencyAmountFormControl,
-    'target_user': this.targetUserFormControl,
-    'target_account': this.targetAccountFormControl,
+    'user': this.userFormControl
   });
 
+  displayedColumnsForEmitedTransactions = [
+    'target_user.name',
+    'operation.amount',
+    'operation.type',
+    'operation.currency.name',
+    'operation.currency.symbol'
+  ];
+
+  dataSourceEmitedTransactions: MatTableDataSource<Transaction>;
+
+  @ViewChild('paginatorForEmitedTransactions', { read: MatPaginator }) paginatorForEmitedTransactions: MatPaginator;
+  @ViewChild('sorterForEmitedTransactions', { read: MatSort }) sorterForEmitedTransactions: MatSort;
+
+
+  displayedColumnsForReceivedTransactions = [
+    'origin_user.name',
+    'operation.amount',
+    'operation.type',
+    'operation.currency.name',
+    'operation.currency.symbol'
+  ];
+
+  dataSourceReceivedTransactions: MatTableDataSource<Transaction>;
+
+  @ViewChild('paginatorForReceivedTransactions', { read: MatPaginator }) paginatorForReceivedTransactions: MatPaginator;
+  @ViewChild('sorterForReceivedTransactions', { read: MatSort }) sorterForReceivedTransactions: MatSort;
 
   constructor(
-    public route: ActivatedRoute,
-    public location: Location,
-    private userService: UserService,
-    private currencyService: CurrencyService,
-    private alertService: AlertService
-  ) {}
+/*     private alertService: AlertService, */
+    private tableColumnUtils: TableColumnUtils,
+    public dialog: MatDialog,
+    private userService: UserService
+  ) {
+    this.dataSourceEmitedTransactions = new MatTableDataSource<Transaction>();
+    this.dataSourceEmitedTransactions.filterPredicate =
+      this.tableColumnUtils.getFilterPerdicate(this.displayedColumnsForEmitedTransactions);
+    this.dataSourceEmitedTransactions.sortingDataAccessor = this.tableColumnUtils.getSortingDataAccessor();
+
+    this.dataSourceReceivedTransactions = new MatTableDataSource<Transaction>();
+    this.dataSourceReceivedTransactions.filterPredicate =
+      this.tableColumnUtils.getFilterPerdicate(this.displayedColumnsForReceivedTransactions);
+    this.dataSourceReceivedTransactions.sortingDataAccessor = this.tableColumnUtils.getSortingDataAccessor();
+  }
+
+  applyEmitedFilter(filterValue: string) {
+    this.dataSourceEmitedTransactions.filter = this.tableColumnUtils.normalizeFilter(filterValue);
+  }
+
+  applyReceivedFilter(filterValue: string) {
+    this.dataSourceReceivedTransactions.filter = this.tableColumnUtils.normalizeFilter(filterValue);
+  }
 
   ngOnInit() {
-    this.userService.getUsers().then(
-      users => (this.users = users)
+    this.userService.getUsers().then(users =>
+      this.users = users
     );
   }
 
@@ -68,63 +119,51 @@ export class TransactionComponent implements OnInit {
     return this.form.valid;
   }
 
-  /* realizar transferencia entre cualquier tipo de cuenta y
-  por medio de la cotizacion, realizar las operaciones de intercambio. */
-  findOriginUserAccounts(user: User) {
-    this.userService.getAccounts(user).then(
-      accounts => (this.originAccounts = accounts)
-    );
+  ngAfterViewInit() {
+    this.dataSourceEmitedTransactions.sort = this.sorterForEmitedTransactions;
+    this.dataSourceEmitedTransactions.paginator = this.paginatorForEmitedTransactions;
+    this.dataSourceReceivedTransactions.sort = this.sorterForReceivedTransactions;
+    this.dataSourceReceivedTransactions.paginator = this.paginatorForReceivedTransactions;
   }
 
-  showAmount(account: Account) {
-    (<HTMLInputElement> document.getElementById('available_amount')).value = account.amount.toString();
-  }
-
-  findTargetUserAccounts(user: User) {
-    this.userService.getAccounts(user).then(
-      accounts => (this.targetAccounts = accounts)
-    );
-  }
-
-  doTransaction() {
-
-    if (this.validateForm()) {
-
-      const transferency_amount = this.form.get('transferency_amount').value ;
-
-      if ( transferency_amount > 0 ) {
-
-        const origin_account = this.form.get('origin_account').value as Account ;
-        const target_account = this.form.get('target_account').value as Account ;
-
-        if ( origin_account.amount > 0 && transferency_amount <= origin_account.amount  ) {
-
-          if ( origin_account.currency.id === target_account.currency.id ) {
-
-            var operation = new Operation();
-            operation.amount = transferency_amount;
-            operation.type = OperationType.credit;
-            operation.currency = origin_account.currency;
-            operation.date = new Date(Date.now());
-
-            const origin_user = this.form.get('origin_user').value as User;
-            const target_user = this.form.get('target_user').value as User;
-
-            // realiza la transferencia
-            this.userService.doTransaction(origin_user, target_user, operation).then();
-
-          } else {
-            this.alertService.error('Las operaciones de transferencia solo pueden realizarce entre cuentas de igual moneda');
-          }
-        } else {
-          this.alertService.error('La cuenta no tiene fondos suficientes para realizar la operacion');
-        }
-      } else {
-        this.alertService.error('No se puede realizar una transferencia de un monto negativo');
-      }
+  onUserSelect(user: User) {
+    this.selectedUser = user;
+    console.log(this.selectedUser);
+    this.refresh();
+    if (!user) {
+      this.dataSourceEmitedTransactions.data = [];
+      this.dataSourceReceivedTransactions.data = [];
     }
-
-
   }
+
+  refresh() {
+    if (this.selectedUser) {
+      this.userService.getEmitedTransactions(this.selectedUser).then(transactions =>
+        this.dataSourceEmitedTransactions.data = transactions
+      );
+      this.userService.getReceivedTransactions(this.selectedUser).then(transactions =>
+        this.dataSourceReceivedTransactions.data = transactions
+      );
+    }
+  }
+
+  addNew() {
+    const dialogRef = this.dialog.open(AddTransactionDialogComponent, {
+       data: {title: 'transaction', user: this.selectedUser }
+     });
+
+     dialogRef.afterClosed().subscribe(result => {
+       console.log('received data from dialog: ' + result);
+
+       if (result instanceof Map) {
+          // realiza la transferencia
+          this.userService.doTransaction(this.selectedUser, result.get('target_user'), result.get('operation')).then();
+         /**  TODO > deberia utilizar websoquet para tener una actualizacion dinamica en caso que algun otro
+          *   genere una transaccion hacia mi cuenta, sino no la veria  */
+         this.refresh();
+       }
+     });
+   }
+
 
 }

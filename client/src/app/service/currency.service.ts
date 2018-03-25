@@ -7,12 +7,13 @@ import { User } from '..//model/user.model';
 import { Currency } from '../model/currency.model';
 
 import { LoaderService } from '../service/loader.service';
+import { AlertService } from '../service/alert.service';
 
 @Injectable()
 export class CurrencyService {
   private currencyUrl = '/ripio_app/currencies';
 
-  constructor(private http: HttpClient, private loaderService: LoaderService) { }
+  constructor(private http: HttpClient, private loaderService: LoaderService, private alertService: AlertService) { }
 
   getCurrencies(): Promise<Currency[]> {
     this.loaderService.show();
@@ -22,7 +23,7 @@ export class CurrencyService {
           this.loaderService.hide();
           return response as Currency[];
          })
-         .catch(this.handleError);
+         .catch(err => this.handleError(err));
   }
 
    getCurrency(currencyName: string): Promise<Currency> {
@@ -33,7 +34,7 @@ export class CurrencyService {
           this.loaderService.hide();
           return response as Currency;
          })
-         .catch(this.handleError);
+         .catch(err => this.handleError(err));
   }
 
    updateCurrency(currency: Currency): Promise<Currency> {
@@ -45,7 +46,7 @@ export class CurrencyService {
           this.loaderService.hide();
           return response as Currency;
          })
-        .catch(this.handleError);
+        .catch(err => this.handleError(err));
 
    }
 
@@ -57,11 +58,15 @@ export class CurrencyService {
           this.loaderService.hide();
           return response as Currency;
          })
-         .catch(this.handleError);
+         .catch(err => this.handleError(err));
   }
 
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error);
+    setInterval(() => {
+      this.loaderService.hide();
+      this.alertService.error('An error occurred(' + error.status + ') : ' + error.statusText);
+    }, 3000);
     return Promise.reject(error);
   }
 

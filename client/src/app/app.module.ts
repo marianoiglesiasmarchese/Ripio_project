@@ -31,6 +31,9 @@ import { EditAccountDialogComponent } from './app-account-dialog/app-edit-accoun
 import { DeleteAccountDialogComponent } from './app-account-dialog/app-delete-account/delete-account-dialog.component';
 
 import { TransactionComponent } from './app-transaction/transaction.component';
+import { AddTransactionDialogComponent } from './app-transaction-dialog/app-add-transaction/add-transaction-dialog.component';
+import { EditTransactionDialogComponent } from './app-transaction-dialog/app-edit-transaction/edit-transaction-dialog.component';
+import { DeleteTransactionDialogComponent } from './app-transaction-dialog/app-delete-transaction/delete-transaction-dialog.component';
 
 import {
   MatCardModule,
@@ -47,7 +50,8 @@ import {
   MatToolbarModule,
   MatPaginatorModule,
   MatDialogModule,
-  MatProgressBarModule
+  MatProgressBarModule,
+  MatTabsModule
 } from '@angular/material';
 
 import { UserService } from './service/user.service';
@@ -77,7 +81,10 @@ import { LocalErrorHandler} from './error.handler';
     DeleteCurrencyDialogComponent,
     AddAccountDialogComponent,
     EditAccountDialogComponent,
-    DeleteAccountDialogComponent
+    DeleteAccountDialogComponent,
+    AddTransactionDialogComponent,
+    EditTransactionDialogComponent,
+    DeleteTransactionDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -100,7 +107,8 @@ import { LocalErrorHandler} from './error.handler';
     MatToolbarModule,
     MatPaginatorModule,
     MatDialogModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatTabsModule
   ],
   providers: [
     UserService,
@@ -124,7 +132,10 @@ import { LocalErrorHandler} from './error.handler';
     DeleteCurrencyDialogComponent,
     AddAccountDialogComponent,
     EditAccountDialogComponent,
-    DeleteAccountDialogComponent
+    DeleteAccountDialogComponent,
+    AddTransactionDialogComponent,
+    EditTransactionDialogComponent,
+    DeleteTransactionDialogComponent
   ],
   bootstrap: [
     AppComponent,

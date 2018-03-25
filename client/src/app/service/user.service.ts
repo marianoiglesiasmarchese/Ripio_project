@@ -9,12 +9,13 @@ import { Operation } from '../model/operation.model';
 import { Transaction } from '../model/transaction.model';
 
 import { LoaderService } from '../service/loader.service';
+import { AlertService } from '../service/alert.service';
 
 @Injectable()
 export class UserService {
   private userUrl = '/ripio_app/users';
 
-  constructor(private http: HttpClient, private loaderService: LoaderService) { }
+  constructor(private http: HttpClient, private loaderService: LoaderService, private alertService: AlertService) { }
 
   getUsers(): Promise<User[]> {
     this.loaderService.show();
@@ -24,7 +25,7 @@ export class UserService {
           this.loaderService.hide();
           return response as User[];
          })
-         .catch(this.handleError);
+         .catch(err => this.handleError(err));
   }
 
   getUser(user: User): Promise<User> {
@@ -36,7 +37,7 @@ export class UserService {
           this.loaderService.hide();
           return response as User;
          })
-         .catch(this.handleError);
+         .catch(err => this.handleError(err));
   }
 
   updateUser(user: User): Promise<User> {
@@ -48,7 +49,7 @@ export class UserService {
           this.loaderService.hide();
           return response as User;
          })
-        .catch(this.handleError);
+        .catch(err => this.handleError(err));
    }
 
   saveUser(user: User): Promise<User> {
@@ -59,7 +60,7 @@ export class UserService {
           this.loaderService.hide();
           return response as User;
          })
-         .catch(this.handleError);
+         .catch(err => this.handleError(err));
   }
 
   getAccounts(user: User): Promise<Account[]> {
@@ -71,7 +72,7 @@ export class UserService {
             this.loaderService.hide();
             return response as Account[];
            })
-         .catch(this.handleError);
+         .catch(err => this.handleError(err));
   }
 
   saveAccount(user: User, account: Account): Promise<Account[]> {
@@ -83,7 +84,7 @@ export class UserService {
             this.loaderService.hide();
             return response as Account[];
           })
-         .catch(this.handleError);
+         .catch(err => this.handleError(err));
   }
 
   updateAccount(user: User, account: Account): Promise<Account[]> {
@@ -96,7 +97,7 @@ export class UserService {
             this.loaderService.hide();
             return response as Account[];
           })
-         .catch(this.handleError);
+         .catch(err => this.handleError(err));
   }
 
   doTransaction(origin, target: User, operation: Operation): Promise<Transaction> {
@@ -109,11 +110,39 @@ export class UserService {
             this.loaderService.hide();
             return response as Transaction;
           })
-         .catch(this.handleError);
+         .catch(err => this.handleError(err));
+  }
+
+  getEmitedTransactions(user: User): Promise<Transaction[]> {
+    this.loaderService.show();
+    const userOid: String = user.id;
+    return this.http.get(`${this.userUrl}/${userOid}/emited_transactions`)
+         .toPromise()
+         .then(response => {
+            this.loaderService.hide();
+            return response as Transaction[];
+           })
+         .catch(err => this.handleError(err));
+  }
+
+  getReceivedTransactions(user: User): Promise<Transaction[]> {
+    this.loaderService.show();
+    const userOid: String = user.id;
+    return this.http.get(`${this.userUrl}/${userOid}/received_transactions`)
+         .toPromise()
+         .then(response => {
+            this.loaderService.hide();
+            return response as Transaction[];
+           })
+         .catch(err => this.handleError(err));
   }
 
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error);
+    setInterval(() => {
+      this.loaderService.hide();
+      this.alertService.error('An error occurred(' + error.status + ') : ' + error.statusText);
+    }, 3000);
     return Promise.reject(error);
   }
 

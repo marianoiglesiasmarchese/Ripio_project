@@ -1,106 +1,160 @@
-<mat-card  >
+<mat-toolbar>
+  <span>Transactions for user </span>
+  <span class="spacer"></span>
+</mat-toolbar>
 
-  <mat-card-header>
-    <!--<div mat-card-avatar class="example-header-image"></div> -->
-    <mat-card-title>Transaction</mat-card-title>
-    <mat-card-subtitle>From origin to target user in the same currency</mat-card-subtitle>
-  </mat-card-header>
-  <!--  <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
-  <mat-card-content  >
 
-    <form class="example-form">
-      <div class="example-container">
 
-        <p>
-          seleccione el usuario que origina la trnasaccion
-        </p>
+<div class="container mat-elevation-z8">
 
-        <mat-form-field>
-          <mat-select placeholder="Origin user" (valueChange)="findOriginUserAccounts($event)" name='origin_user' [formControl]='originUserFormControl'>
-            <mat-option>None</mat-option>
-            <mat-option *ngFor='let user of users' [value]="user">
-              {{user.name}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="originUserFormControl.hasError('required')">
-            Seleccione un usuario origen de la transferencia
-          </mat-error>
-        </mat-form-field>
 
-        <p>
-          seleccione cuenta de usuario origen
-        </p>
-        <mat-form-field>
-          <mat-select placeholder="Origin user account" (valueChange)="showAmount($event)" name='origin_account' [formControl]='originAccountFormControl'>
-            <mat-option>None</mat-option>
-            <mat-option *ngFor='let originAccount of originAccounts' [value]="originAccount">
-              Account in {{originAccount.currency.name}} - {{originAccount.currency.symbol}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="originAccountFormControl.hasError('required')">
-            Seleccione una cuenta origen de transferencia
-          </mat-error>
-        </mat-form-field>
+  <form class="form">
+    <div class="example-container">
 
-        <p>
-          dinero disponible
-        </p>
+      <mat-form-field>
+        <mat-select placeholder="User" name='user' [formControl]='userFormControl' (valueChange)="onUserSelect($event)">
+          <mat-option>None</mat-option>
+          <mat-option *ngFor='let user of users' [value]="user">
+            {{user.name}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="userFormControl.hasError('required')">
+          Seleccione el usuario del que desea ver las transferencias
+        </mat-error>
+      </mat-form-field>
 
-        <mat-form-field>
-          <input id="available_amount" matInput placeholder="Amount" value="0.0" type="number" disabled>
-        </mat-form-field>
+    </div>
+  </form>
 
-        <p>
-          dinero transferido
-        </p>
+  <mat-tab-group>
+    <mat-tab label="Emited transactions">
 
-        <mat-form-field>
-          <input matInput name="transferency_amount" placeholder="Transferency amount" value="0.0" type="number" [formControl]='transferencyAmountFormControl'>
-          <mat-error *ngIf="transferencyAmountFormControl.hasError('required')">
-            Ingrese monto a transferir
-          </mat-error>
-        </mat-form-field>
+  <button mat-icon-button color="primary" [disabled]='!selectedUser' (click)="addNew()" style="float: right;">
+    <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+  </button>
+  <span class="spacer"></span>
 
-        <p>
-          seleccione el usuario destino de la trnasaccion
-        </p>
+  <div class="form">
 
-        <mat-form-field>
-          <mat-select placeholder="Target user" (valueChange)="findTargetUserAccounts($event)" name='target_user' [formControl]='targetUserFormControl'>
-            <mat-option>None</mat-option>
-            <mat-option *ngFor='let user of users' [value]="user">
-              {{user.name}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="targetUserFormControl.hasError('required')">
-            Seleccione un usuario destino de la transferencia
-          </mat-error>
-        </mat-form-field>
+    <mat-form-field floatPlaceholder="never">
+      <input matInput #filter (keyup)="applyEmitedFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
 
-        <p>
-          seleccione cuenta destino de transaccion
-        </p>
+  </div>
 
-        <mat-form-field>
-          <mat-select placeholder="Target user account" name='target_account' [formControl]='targetAccountFormControl'>
-            <mat-option>None</mat-option>
-            <mat-option *ngFor='let targetAccount of targetAccounts' [value]="targetAccount">
-              Account in {{targetAccount.currency.name}} - {{targetAccount.currency.symbol}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="targetAccountFormControl.hasError('required')">
-            Seleccione una cuenta destino de transferencia
-          </mat-error>
-        </mat-form-field>
+  <mat-table #sorter class="mat-cell" [dataSource]="dataSourceEmitedTransactions" matSort matSortActive="target_user.name"
+    matSortDirection="asc" matSortDisableClear>
 
-      </div>
-      </form>
+    <ng-container matColumnDef="target_user.name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Target user</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.target_user.name}}</mat-cell>
+    </ng-container>
 
-  </mat-card-content>
+    <ng-container matColumnDef="operation.amount">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Amount</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.operation.amount}}</mat-cell>
+    </ng-container>
 
-  <mat-card-actions >
-    <button mat-raised-button (click)='doTransaction()'>Do transaction</button>
-    <button mat-raised-button>Cancel</button>
-  </mat-card-actions>
+    <ng-container matColumnDef="operation.type">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.operation.type}}</mat-cell>
+    </ng-container>
 
-</mat-card>
+    <ng-container matColumnDef="operation.currency.name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Currency</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.operation.currency.name}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="operation.currency.symbol">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Symbol</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.operation.currency.symbol}}</mat-cell>
+    </ng-container>
+
+
+    <!--    <ng-container matColumnDef="created_at">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Created at</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.created_at}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="updated_at">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Updated at</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.updated_at}}</mat-cell>
+    </ng-container>
+  -->
+
+    <mat-header-row *matHeaderRowDef="displayedColumnsForEmitedTransactions"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumnsForEmitedTransactions;"></mat-row>
+  </mat-table>
+
+  <mat-paginator #paginator [length]="dataSourceEmitedTransactions.filteredData.length" [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+  </mat-paginator>
+
+  <div class="no-results" [style.display]="dataSourceEmitedTransactions.data.length == 0 ? '' : 'none'">
+    No results
+  </div>
+
+  </mat-tab>
+
+  <mat-tab label="Received transactions">
+
+  <div class="form">
+
+    <mat-form-field floatPlaceholder="never">
+      <input matInput #filter (keyup)="applyReceivedFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+
+  </div>
+
+  <mat-table #sorter class="mat-cell" [dataSource]="dataSourceReceivedTransactions" matSort matSortActive="origin_user.name"
+    matSortDirection="asc" matSortDisableClear>
+
+    <ng-container matColumnDef="origin_user.name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Origin user</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.target_user.name}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="operation.amount">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Amount</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.operation.amount}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="operation.type">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.operation.type}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="operation.currency.name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Currency</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.operation.currency.name}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="operation.currency.symbol">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Symbol</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.operation.currency.symbol}}</mat-cell>
+    </ng-container>
+
+    <!--    <ng-container matColumnDef="created_at">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Created at</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.created_at}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="updated_at">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Updated at</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.updated_at}}</mat-cell>
+    </ng-container>
+  -->
+
+    <mat-header-row *matHeaderRowDef="displayedColumnsForReceivedTransactions"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumnsForReceivedTransactions;"></mat-row>
+  </mat-table>
+
+  <mat-paginator #paginator [length]="dataSourceReceivedTransactions.filteredData.length" [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+  </mat-paginator>
+
+  <div class="no-results" [style.display]="dataSourceReceivedTransactions.data.length == 0 ? '' : 'none'">
+    No results
+  </div>
+</mat-tab>
+</mat-tab-group>
+
+</div>

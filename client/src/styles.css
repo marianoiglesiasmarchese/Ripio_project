@@ -25,6 +25,16 @@ example-container {
   float: right;
 }
 
+hr{
+  border-color: #0097A7;
+}
+
+/* h2{
+  font-family: roboto;
+  text-rendering: optimizeLegibility;
+} */
+
+
 /*
 
 @import '~@angular/material/theming';
