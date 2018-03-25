@@ -17,6 +17,8 @@ from ripio_project.model.exception.BadRequestError import BadRequestError
 from ripio_project.model.Transaction import Transaction
 from ripio_project.model.exception.DecreaceAmountError import DecreaceAmountError
 from model.exception.Error import Error
+from ripio_project.model.enum.OperationType import OperationType
+import copy
 
 
 @app.route("/ripio_app/users", methods=['POST'])
@@ -172,13 +174,13 @@ def new_transaction(origin_id, target_id):
             origin = db.query(User).filter(User.id == origin_id).first() 
             target = db.query(User).filter(User.id == target_id).first() 
             
-            currency = db.query(Currency).filter(Currency.id == request.json['currency']['id']).first();
+            currency = db.query(Currency).filter(Currency.id == request.json['currency']['id']).first()
                         
             operation_date = request.json['date']
             operation_date = datetime.strptime(operation_date, '%Y-%m-%dT%H:%M:%S.%fZ')
             
-            operation = Operation(request.json['amount'], request.json['type'], operation_date, currency) 
-            
+            operation = Operation(request.json['amount'], operation_date, currency) 
+         
             response = do_transaction(origin, target, operation)
         except Exception as err:
             db.rollback()            
@@ -191,20 +193,23 @@ def do_transaction(origin, target, operation):
     
     response = None
     
-    try:                
-        transaction = Transaction(origin, target, operation)  # falta saber si parte de una operacion de suma o de resta 
+    try:
+                    
+        emitedTransaction = Transaction(target, operation, OperationType.DEBIT) 
         
         origin_account = origin.find_account_by_currency(operation.currency)
-        origin.add_emited_transaction(transaction)
-        origin_account.decreace_amount(operation.amount)
+        origin.transactions.append(emitedTransaction)
+        origin_account.apply_operation(operation, OperationType.DEBIT)
+                        
+        receivedTransaction = Transaction(origin, operation, OperationType.CREDIT) 
         
         target_account = target.find_account_by_currency(operation.currency)
-        target.add_received_transaction(transaction)
-        target_account.increace_amount(operation.amount)  # operacion opuesta      
+        target.transactions.append(receivedTransaction)
+        target_account.apply_operation(operation, OperationType.CREDIT)        
 
         db.commit()
      
-        return transaction.toJSON()     
+        return emitedTransaction.toJSON()     
     except DecreaceAmountError as err:
         db.rollback()            
         app.logger.error('An error occurred')
@@ -219,34 +224,17 @@ def do_transaction(origin, target, operation):
     return response
 
 
-@app.route("/ripio_app/users/<user_id>/emited_transactions")
-def get_all_emited_transactions(user_id): 
+@app.route("/ripio_app/users/<user_id>/transactions")
+def get_all_transactions(user_id): 
     
-    app.logger.info('getting all emited transactions for a user')
+    app.logger.info('getting all transactions for a user')
     
-    emited_transactions_list_result = [] 
-    
-    user = db.query(User).filter(User.id == user_id).first() 
-    emited_transactions_list = user.emited_transactions
-    
-    for transaction in emited_transactions_list:
-        emited_transactions_list_result.append(transaction.toJSON())
-    
-    return jsonify(emited_transactions_list_result)
-
-
-@app.route("/ripio_app/users/<user_id>/received_transactions")
-def get_all_received_transactions(user_id): 
-    
-    app.logger.info('getting all received transactions for a user')
-
-    received_transactions_list_result = [] 
+    transactions_list_result = [] 
     
     user = db.query(User).filter(User.id == user_id).first() 
-    received_transactions_list = user.received_transactions
+    transactions_list = user.transactions
     
-    for transaction in received_transactions_list:
-        received_transactions_list_result.append(transaction.toJSON())
+    for transaction in transactions_list:
+        transactions_list_result.append(transaction.toJSON())
     
-    return jsonify(received_transactions_list_result)
-
+    return jsonify(transactions_list_result)

@@ -20,7 +20,7 @@ class Account(Base):
     enable = Column(Boolean)
 
     currency_id = Column(Integer, ForeignKey('currencies.id'))
-    currency = relationship("Currency", uselist=False, back_populates="account", order_by="Currency.id")
+    currency = relationship("Currency", back_populates="account", order_by="Currency.id")
     
     user_id = Column(Integer, ForeignKey('users.id'))
 
@@ -30,8 +30,8 @@ class Account(Base):
         self.name = name
         self.enable = enable
         
-    def apply_operation(self, operation):
-        if operation.type == OperationType.CREDIT:
+    def apply_operation(self, operation, operationType):
+        if operationType == OperationType.CREDIT:
             self.increace_amount(operation.amount)
         else:
             self.decreace_amount(operation.amount)
