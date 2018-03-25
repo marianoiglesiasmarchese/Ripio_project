@@ -34,6 +34,18 @@ a {
   color: rgb(255, 255, 255);
 }
 
+mat-cell{
+  padding-inline-end: 5%;
+}
+
+.mat-header-row {
+  /* en algunas versiones de CHROME no funciona y creo que en ninguna de IE o Edge */
+  position: sticky;
+  top: 0;
+  background: rgb(245, 245, 245);
+  z-index: 1;
+}
+
 /*
 
 @import '~@angular/material/theming';

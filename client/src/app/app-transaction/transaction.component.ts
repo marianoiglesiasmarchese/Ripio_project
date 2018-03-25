@@ -28,8 +28,6 @@ import { Operation } from '../model/operation.model';
 import { OperationType } from '../model/enum/operation-type.model';
 
 import { AddTransactionDialogComponent } from '../app-transaction-dialog/app-add-transaction/add-transaction-dialog.component';
-/* import { EditTransactionDialogComponent } from '../app-transaction-dialog/app-edit-transaction/edit-transaction-dialog.component';
-import { DeleteTransactionDialogComponent } from '../app-transaction-dialog/app-delete-transaction/delete-transaction-dialog.component'; */
 
 import { TableColumnUtils } from '../service/table-column.service';
 import { AlertService } from '../service/alert.service';

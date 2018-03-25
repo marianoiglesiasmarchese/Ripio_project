@@ -33,8 +33,6 @@ import { DeleteAccountDialogComponent } from './app-account-dialog/app-delete-ac
 
 import { TransactionComponent } from './app-transaction/transaction.component';
 import { AddTransactionDialogComponent } from './app-transaction-dialog/app-add-transaction/add-transaction-dialog.component';
-import { EditTransactionDialogComponent } from './app-transaction-dialog/app-edit-transaction/edit-transaction-dialog.component';
-import { DeleteTransactionDialogComponent } from './app-transaction-dialog/app-delete-transaction/delete-transaction-dialog.component';
 
 import {
   MatCardModule,
@@ -83,9 +81,7 @@ import { LocalErrorHandler} from './error.handler';
     AddAccountDialogComponent,
     EditAccountDialogComponent,
     DeleteAccountDialogComponent,
-    AddTransactionDialogComponent,
-    EditTransactionDialogComponent,
-    DeleteTransactionDialogComponent
+    AddTransactionDialogComponent
   ],
   imports: [
     AlertModule.forRoot(),
@@ -135,9 +131,7 @@ import { LocalErrorHandler} from './error.handler';
     AddAccountDialogComponent,
     EditAccountDialogComponent,
     DeleteAccountDialogComponent,
-    AddTransactionDialogComponent,
-    EditTransactionDialogComponent,
-    DeleteTransactionDialogComponent
+    AddTransactionDialogComponent
   ],
   bootstrap: [
     AppComponent,
