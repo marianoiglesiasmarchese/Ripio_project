@@ -86,10 +86,11 @@ export class UserComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('received data from dialog: ' + result);
       if (result instanceof User) {
-        this.userService.saveUser(result).then();
+        this.userService.saveUser(result).then(() =>
         /**  TODO > deberia utilizar websoquet para tener una actualizacion dinamica en caso que algun otro
          *   genere una transaccion hacia mi cuenta, sino no la veria  */
-        this.refresh();
+          this.refresh()
+        );
       }
     });
   }
@@ -103,10 +104,11 @@ export class UserComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('received data from dialog: ' + result);
       if (result instanceof Object) {
-        this.userService.updateUser(result).then();
+        this.userService.updateUser(result).then(() =>
         /**  TODO > deberia utilizar websoquet para tener una actualizacion dinamica en caso que algun otro
          *   genere una transaccion hacia mi cuenta, sino no la veria  */
-        this.refresh();
+          this.refresh()
+        );
       }
     });
   }
@@ -120,10 +122,11 @@ export class UserComponent implements OnInit, AfterViewInit {
       console.log('received data from dialog: ' + result);
       if (result instanceof Object) {
         result.enable = false;
-        this.userService.updateUser(result).then();
+        this.userService.updateUser(result).then(() =>
         /**  TODO > deberia utilizar websoquet para tener una actualizacion dinamica en caso que algun otro
          *   genere una transaccion hacia mi cuenta, sino no la veria  */
-        this.refresh();
+          this.refresh()
+        );
       }
     });
   }

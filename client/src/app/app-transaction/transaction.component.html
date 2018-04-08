@@ -9,7 +9,7 @@
     <div class="example-container">
 
       <mat-form-field>
-        <mat-select placeholder="User" name='user' [formControl]='userFormControl' (valueChange)="onUserSelect($event)">
+        <mat-select placeholder="User" name='user' [formControl]='userFormControl' (valueChange)="findUserAccounts($event)">
           <mat-option>None</mat-option>
           <mat-option *ngFor='let user of users' [value]="user">
             {{user.name}}
@@ -20,9 +20,30 @@
         </mat-error>
       </mat-form-field>
 
+
     </div>
+
+    <div class="example-container">
+      <mat-form-field>
+        <mat-select placeholder="Account" name='account' [formControl]='accountFormControl' (valueChange)="onAccountSelect($event)">
+          <mat-option>None</mat-option>
+          <mat-option *ngFor='let account of accounts' [value]="account">
+            Account in {{account.currency.name}} - {{account.currency.symbol}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="accountFormControl.hasError('required')">
+          Seleccione una cuenta destino de transferencia
+        </mat-error>
+      </mat-form-field>
+    </div>
+
     <span style="float: right;">
-      <button mat-icon-button color="primary" [disabled]='!selectedUser' (click)="addNew()" >
+        Available amount
+        <input matInput id="available_amount" name="available_amount" placeholder="Available amount" value="0.0" type="number" disabled>
+    </span>
+
+    <span style="float: right;">
+      <button mat-icon-button color="primary" [disabled]='!selectedAccount' (click)="addNew()">
         <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
       </button>
     </span>
@@ -39,12 +60,12 @@
 
   </div>
 
-  <mat-table #sorter class="mat-cell" [dataSource]="dataSourceTransactions" matSort matSortActive="user.name"
-    matSortDirection="asc" matSortDisableClear>
+  <mat-table #sorter class="mat-cell" [dataSource]="dataSourceTransactions" matSort matSortActive="operation.date" matSortDirection="asc"
+    matSortDisableClear>
 
-    <ng-container matColumnDef="user.name">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>User (Origin/Target)</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.user.name}}</mat-cell>
+    <ng-container matColumnDef="operation.date">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Date</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.operation.date}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="operation.amount">
@@ -56,16 +77,16 @@
       <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
       <mat-cell *matCellDef="let row"> {{row.type}}</mat-cell>
     </ng-container>
-
-    <ng-container matColumnDef="operation.currency.name">
+<!--
+    <ng-container matColumnDef="account.currency.name">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Currency</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.operation.currency.name}}</mat-cell>
+      <mat-cell *matCellDef="let row"> {{row.account.currency.name}}</mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="operation.currency.symbol">
+    <ng-container matColumnDef="account.currency.symbol">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Symbol</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.operation.currency.symbol}}</mat-cell>
-    </ng-container>
+      <mat-cell *matCellDef="let row"> {{row.account.currency.symbol}}</mat-cell>
+    </ng-container>  -->
 
 
     <!--    <ng-container matColumnDef="created_at">

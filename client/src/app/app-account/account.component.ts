@@ -116,10 +116,11 @@ export class AccountComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('received data from dialog: ' + result);
       if (result instanceof Account) {
-        this.userService.saveAccount(this.selectedUser, result).then();
+        this.userService.saveAccount(this.selectedUser, result).then(() =>
         /**  TODO > deberia utilizar websoquet para tener una actualizacion dinamica en caso que algun otro
          *   genere una transaccion hacia mi cuenta, sino no la veria  */
-        this.refresh();
+          this.refresh()
+        );
       }
     });
   }
@@ -133,10 +134,11 @@ export class AccountComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('received data from dialog: ' + result);
       if (result instanceof Object) {
-        this.userService.updateAccount(this.selectedUser, result).then();
+        this.userService.updateAccount(this.selectedUser, result).then(() =>
         /**  TODO > deberia utilizar websoquet para tener una actualizacion dinamica en caso que algun otro
          *   genere una transaccion hacia mi cuenta, sino no la veria  */
-        this.refresh();
+          this.refresh()
+        );
       }
     });
   }
@@ -150,10 +152,11 @@ export class AccountComponent implements OnInit, AfterViewInit {
       console.log('received data from dialog: ' + result);
       if (result instanceof Object) {
         result.enable = false;
-        this.userService.updateAccount(this.selectedUser, result).then();
+        this.userService.updateAccount(this.selectedUser, result).then(() =>
         /**  TODO > deberia utilizar websoquet para tener una actualizacion dinamica en caso que algun otro
          *   genere una transaccion hacia mi cuenta, sino no la veria  */
-        this.refresh();
+          this.refresh()
+        );
       }
     });
   }

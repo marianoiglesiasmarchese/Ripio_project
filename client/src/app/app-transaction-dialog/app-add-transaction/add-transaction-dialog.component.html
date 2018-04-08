@@ -1,103 +1,3 @@
-
-<!--
-  <mat-card-content  >
-
-    <form class="example-form">
-      <div class="example-container">
-
-        <p>
-          seleccione el usuario que origina la trnasaccion
-        </p>
-
-        <mat-form-field>
-          <mat-select placeholder="Origin user" (valueChange)="findOriginUserAccounts($event)" name='origin_user' [formControl]='originUserFormControl'>
-            <mat-option>None</mat-option>
-            <mat-option *ngFor='let user of users' [value]="user">
-              {{user.name}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="originUserFormControl.hasError('required')">
-            Seleccione un usuario origen de la transferencia
-          </mat-error>
-        </mat-form-field>
-
-        <p>
-          seleccione cuenta de usuario origen
-        </p>
-        <mat-form-field>
-          <mat-select placeholder="Origin account" (valueChange)="showAmount($event)" name='origin_account' [formControl]='originAccountFormControl'>
-            <mat-option>None</mat-option>
-            <mat-option *ngFor='let originAccount of originAccounts' [value]="originAccount">
-              Account in {{originAccount.currency.name}} - {{originAccount.currency.symbol}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="originAccountFormControl.hasError('required')">
-            Seleccione una cuenta origen de transferencia
-          </mat-error>
-        </mat-form-field>
-
-        <p>
-          dinero disponible
-        </p>
-
-        <mat-form-field>
-          <input matInput name="available_amount" placeholder="Available amount" value="0.0" type="number" disabled>
-        </mat-form-field>
-
-        <p>
-          dinero transferido
-        </p>
-
-        <mat-form-field>
-          <input matInput name="transferency_amount" placeholder="Transferency amount" value="0.0" type="number" [formControl]='transferencyAmountFormControl'>
-          <mat-error *ngIf="transferencyAmountFormControl.hasError('required')">
-            Ingrese monto a transferir
-          </mat-error>
-        </mat-form-field>
-
-        <p>
-          seleccione el usuario destino de la trnasaccion
-        </p>
-
-        <mat-form-field>
-          <mat-select placeholder="Target user" (valueChange)="findTargetUserAccounts($event)" name='target_user' [formControl]='targetUserFormControl'>
-            <mat-option>None</mat-option>
-            <mat-option *ngFor='let user of users' [value]="user">
-              {{user.name}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="targetUserFormControl.hasError('required')">
-            Seleccione un usuario destino de la transferencia
-          </mat-error>
-        </mat-form-field>
-
-        <p>
-          seleccione cuenta destino de transaccion
-        </p>
-
-        <mat-form-field>
-          <mat-select placeholder="Target account" name='target_account' [formControl]='targetAccountFormControl'>
-            <mat-option>None</mat-option>
-            <mat-option *ngFor='let targetAccount of targetAccounts' [value]="targetAccount">
-              Account in {{targetAccount.currency.name}} - {{targetAccount.currency.symbol}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="targetAccountFormControl.hasError('required')">
-            Seleccione una cuenta destino de transferencia
-          </mat-error>
-        </mat-form-field>
-
-      </div>
-      </form>
-
-  </mat-card-content>
-
-
- -->
-
-
-
-
 <mat-dialog-content>
 
   <div class="container">
@@ -108,20 +8,8 @@
     <form class="mat-dialog-content">
       <div class="example-container">
 
-          <mat-form-field>
-              <mat-select placeholder="Origin account" (valueChange)="showAmount($event)" name='origin_account' [formControl]='originAccountFormControl'>
-                <mat-option>None</mat-option>
-                <mat-option *ngFor='let originAccount of originAccounts' [value]="originAccount">
-                  Account in {{originAccount.currency.name}} - {{originAccount.currency.symbol}}
-                </mat-option>
-              </mat-select>
-              <mat-error *ngIf="originAccountFormControl.hasError('required')">
-                Seleccione una cuenta origen de transferencia
-              </mat-error>
-            </mat-form-field>
-
             <mat-form-field>
-                <input matInput id="available_amount" name="available_amount" placeholder="Available amount" value="0.0" type="number" disabled>
+                <input matInput id="dialog_available_amount" name="available_amount" placeholder="Available amount" value="0.0" type="number" disabled>
               </mat-form-field>
 
               <mat-form-field>
@@ -155,33 +43,6 @@
                   Seleccione una cuenta destino de transferencia
                 </mat-error>
               </mat-form-field>
-
-   <!--      <mat-form-field>
-          <input matInput name="name" placeholder="Name" maxlength="250" [(ngModel)]="data.account && data.account.name" [formControl]="nameFormControl">
-          <mat-error *ngIf="nameFormControl.hasError('required')">
-            Ingrese un nombre
-          </mat-error>
-        </mat-form-field> -->
-
-<!--         <mat-form-field>
-          <input matInput name="amount" placeholder="Amount" maxlength="250" [(ngModel)]="data.account && data.account.amount" [formControl]="amountFormControl"
-            type="number" value="0.0" min="0.0">
-          <mat-error *ngIf="amountFormControl.hasError('required')">
-            Ingrese un monto
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field>
-          <mat-select placeholder="Currency" name='currency' [(ngModel)]="data.account && data.account.currency" [formControl]='currencyFormControl'>
-            <mat-option>None</mat-option>
-            <mat-option *ngFor='let currency of currencies' [value]="currency">
-              {{currency.name}} - {{currency.symbol}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="currencyFormControl.hasError('required')">
-            Seleccione la moneda de la cuenta que intenta crear
-          </mat-error>
-        </mat-form-field> -->
 
       </div>
     </form>

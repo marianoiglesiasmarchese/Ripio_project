@@ -79,10 +79,11 @@ export class CurrencyComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('received data from dialog: ' + result);
       if (result instanceof Currency) {
-        this.currencyService.saveCurrency(result).then();
+        this.currencyService.saveCurrency(result).then(() =>
         /**  TODO > deberia utilizar websoquet para tener una actualizacion dinamica en caso que algun otro
          *   genere una transaccion hacia mi cuenta, sino no la veria  */
-        this.refresh();
+          this.refresh()
+        );
       }
     });
   }
@@ -96,10 +97,11 @@ export class CurrencyComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('received data from dialog: ' + result);
       if (result instanceof Object) {
-        this.currencyService.updateCurrency(result).then();
+        this.currencyService.updateCurrency(result).then(() =>
         /**  TODO > deberia utilizar websoquet para tener una actualizacion dinamica en caso que algun otro
          *   genere una transaccion hacia mi cuenta, sino no la veria  */
-        this.refresh();
+          this.refresh()
+        );
       }
     });
   }
@@ -113,10 +115,11 @@ export class CurrencyComponent implements OnInit, AfterViewInit {
       console.log('received data from dialog: ' + result);
       if (result instanceof Object) {
         result.enable = false;
-        this.currencyService.updateCurrency(result).then();
+        this.currencyService.updateCurrency(result).then(() =>
         /**  TODO > deberia utilizar websoquet para tener una actualizacion dinamica en caso que algun otro
          *   genere una transaccion hacia mi cuenta, sino no la veria  */
-        this.refresh();
+          this.refresh()
+        );
       }
     });
   }

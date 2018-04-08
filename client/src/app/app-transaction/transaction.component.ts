@@ -45,18 +45,23 @@ export class TransactionComponent implements OnInit, AfterViewInit {
   public users: User[];
   public selectedUser: User;
 
+  public accounts: Account[];
+  public selectedAccount: Account;
+
   userFormControl = new FormControl('',  Validators.required);
+  accountFormControl = new FormControl('',  Validators.required);
 
   form = new FormGroup({
-    'user': this.userFormControl
+    'user': this.userFormControl,
+    'account': this.accountFormControl
   });
 
   displayedColumnsTransactions = [
-    'user.name',
+    'operation.date',
     'operation.amount',
     'type',
-    'operation.currency.name',
-    'operation.currency.symbol'
+    /* 'account.currency.name',
+    'account.currency.symbol' */
   ];
 
   dataSourceTransactions: MatTableDataSource<Transaction>;
@@ -99,26 +104,44 @@ export class TransactionComponent implements OnInit, AfterViewInit {
     this.dataSourceTransactions.paginator = this.paginatorTransactions;
   }
 
-  onUserSelect(user: User) {
+  findUserAccounts(user: User) {
+    // limpio las transacciones previas y la cuenta seleccionada del usuario que se habia elegido previamente
+    this.selectedAccount = null;
+    this.dataSourceTransactions.data = [];
     this.selectedUser = user;
     console.log(this.selectedUser);
     this.refresh();
-    if (!user) {
+    this.userService.getAccounts(this.selectedUser).then(
+      accounts => (this.accounts = accounts)
+    );
+  }
+
+  onAccountSelect(account: Account) {
+    this.selectedAccount = account;
+    console.log(this.selectedAccount);
+    this.refresh();
+    if (!this.selectedAccount) {
       this.dataSourceTransactions.data = [];
     }
   }
 
+  showAmount() {
+    (<HTMLInputElement> document.getElementById('available_amount')).value = this.selectedAccount.amount.toString();
+  }
+
   refresh() {
-    if (this.selectedUser) {
-      this.userService.getTransactions(this.selectedUser).then(transactions =>
+    if (this.selectedUser && this.selectedAccount) {
+      this.userService.getTransactionsForAccount(this.selectedUser, this.selectedAccount).then(transactions =>
         this.dataSourceTransactions.data = transactions
       );
+      // TODO > deberia recuerar la cuenta tambien y guardarla asi se cual es el monto de la misma
+      this.showAmount();
     }
   }
 
   addNew() {
     const dialogRef = this.dialog.open(AddTransactionDialogComponent, {
-       data: {title: 'transaction', user: this.selectedUser }
+       data: {title: 'transaction', user: this.selectedUser, account: this.selectedAccount }
      });
 
      dialogRef.afterClosed().subscribe(result => {
@@ -126,10 +149,11 @@ export class TransactionComponent implements OnInit, AfterViewInit {
 
        if (result instanceof Map) {
           // realiza la transferencia
-          this.userService.doTransaction(this.selectedUser, result.get('target_user'), result.get('operation')).then();
-         /**  TODO > deberia utilizar websoquet para tener una actualizacion dinamica en caso que algun otro
-          *   genere una transaccion hacia mi cuenta, sino no la veria  */
-         this.refresh();
+          this.userService.doTransaction(this.selectedUser, result.get('target_user'), result.get('operation')).then(() =>
+          /**  TODO > deberia utilizar websoquet para tener una actualizacion dinamica en caso que algun otro
+           *   genere una transaccion hacia mi cuenta, sino no la veria  */
+            this.refresh()
+          );
        }
      });
    }
