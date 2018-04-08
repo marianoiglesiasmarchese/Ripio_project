@@ -29,7 +29,7 @@ def create_currency():
             response = new_currency.toJSON()
         except Exception as err:
             db.rollback()            
-            app.logger.error('An error occurred')
+            app.logger.error('An error occurred: {0}'.format(err.message))
             raise Error(request)
     return jsonify(response) 
 
@@ -53,7 +53,7 @@ def update_currency(currency_id):
             response = currency.toJSON()
         except Exception as err:
             db.rollback()            
-            app.logger.error('An error occurred')
+            app.logger.error('An error occurred: {0}'.format(err.message))
             raise Error(request=request)
     return jsonify(response) 
 

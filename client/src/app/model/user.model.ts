@@ -1,5 +1,4 @@
 import { Account } from './account.model';
-import { Transaction } from './transaction.model';
 
 export class User {
     id: String;
@@ -7,5 +6,4 @@ export class User {
     email: String;
     enable: Boolean;
     accounts: Account[];
-    transactions: Transaction[];
   }

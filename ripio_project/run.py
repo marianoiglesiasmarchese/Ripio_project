@@ -49,5 +49,5 @@ if __name__ == "__main__":
     handler.setLevel(logging.INFO)
     app.logger.addHandler(handler)
     
-    app.run(use_reloader=False)    
+    app.run(use_reloader=False, threaded=True)    
     

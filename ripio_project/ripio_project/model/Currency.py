@@ -17,11 +17,7 @@ class Currency(Base):
     symbol = Column(String(3), unique=True)
     enable = Column(Boolean)
 
-    #account_id = Column(Integer, ForeignKey('accounts.id'))
     account = relationship("Account", back_populates="currency")   
-    
-    #operation_id = Column(Integer, ForeignKey('operations.id'))
-    operation = relationship("Operation", back_populates="currency")
 
     def __init__(self, name=None, symbol=None, enable=True):
         self.name = name

@@ -23,6 +23,8 @@ class Account(Base):
     currency = relationship("Currency", back_populates="account", order_by="Currency.id")
     
     user_id = Column(Integer, ForeignKey('users.id'))
+    
+    transactions = relationship("Transaction", back_populates="account", foreign_keys="Transaction.account_id", order_by="Transaction.id")
 
     def __init__(self, currency, amount=0, name=None, enable=True):
         self.amount = amount
@@ -30,11 +32,11 @@ class Account(Base):
         self.name = name
         self.enable = enable
         
-    def apply_operation(self, operation, operationType):
-        if operationType == OperationType.CREDIT:
-            self.increace_amount(operation.amount)
+    def apply_transaction(self, transaction):
+        if transaction.type == OperationType.CREDIT:
+            self.increace_amount(transaction.operation.amount)
         else:
-            self.decreace_amount(operation.amount)
+            self.decreace_amount(transaction.operation.amount)
         
     def increace_amount(self, amount):
         self.amount += amount

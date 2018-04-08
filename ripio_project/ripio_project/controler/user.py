@@ -64,7 +64,7 @@ def update_user(user_id):
             response = user.toJSON()
         except Exception as err:
             db.rollback()            
-            app.logger.error('An error occurred')
+            app.logger.error('An error occurred: {0}'.format(err.message))
             raise Error(request=request)
     return jsonify(response) 
 
@@ -130,7 +130,7 @@ def create_account(user_id):
             response = account.toJSON()
         except Exception as err:
             db.rollback()            
-            app.logger.error('An error occurred')
+            app.logger.error('An error occurred: {0}'.format(err.message))
             raise Error(request=request)
     return jsonify(response) 
 
@@ -155,9 +155,24 @@ def update_account(user_id, account_id):
             response = account.toJSON()
         except Exception as err:
             db.rollback()            
-            app.logger.error('An error occurred')
+            app.logger.error('An error occurred: {0}'.format(err.message))
             raise Error(request=request)
     return jsonify(response) 
+
+
+@app.route('/ripio_app/users/<user_id>/accounts/<account_id>/transactions', methods=['GET'])
+def find_account_transactions(user_id, account_id):
+    
+    app.logger.info('getting all transactions for a user account')
+    
+    transactionListResult = [] 
+    
+    account = db.query(Account).filter(Account.id == account_id).first()
+    
+    for transaction in account.transactions:
+        transactionListResult.append(transaction.toJSON())
+    
+    return jsonify(transactionListResult)   
 
 
 @app.route("/ripio_app/users/<origin_id>/do_transaction_to/<target_id>", methods=['POST'])
@@ -174,17 +189,18 @@ def new_transaction(origin_id, target_id):
             origin = db.query(User).filter(User.id == origin_id).first() 
             target = db.query(User).filter(User.id == target_id).first() 
             
-            currency = db.query(Currency).filter(Currency.id == request.json['currency']['id']).first()
+            origin_account = db.query(Account).filter(Account.id == request.json['origin_account']['id']).first()
+            target_account = db.query(Account).filter(Account.id == request.json['target_account']['id']).first()
                         
             operation_date = request.json['date']
             operation_date = datetime.strptime(operation_date, '%Y-%m-%dT%H:%M:%S.%fZ')
             
-            operation = Operation(request.json['amount'], operation_date, currency) 
+            operation = Operation(request.json['amount'], operation_date, origin_account, target_account) 
          
             response = do_transaction(origin, target, operation)
         except Exception as err:
             db.rollback()            
-            app.logger.error('An error occurred')
+            app.logger.error('An error occurred: {0}'.format(err.message))
             raise Error(request=request)
     return jsonify(response)
  
@@ -195,28 +211,26 @@ def do_transaction(origin, target, operation):
     
     try:
                     
-        emitedTransaction = Transaction(target, operation, OperationType.DEBIT) 
+        emitedTransaction = Transaction(operation, OperationType.DEBIT) 
         
-        origin_account = origin.find_account_by_currency(operation.currency)
-        origin.transactions.append(emitedTransaction)
-        origin_account.apply_operation(operation, OperationType.DEBIT)
+        operation.origin_account.transactions.append(emitedTransaction)
+        operation.origin_account.apply_transaction(emitedTransaction)
                         
-        receivedTransaction = Transaction(origin, operation, OperationType.CREDIT) 
+        receivedTransaction = Transaction(operation, OperationType.CREDIT) 
         
-        target_account = target.find_account_by_currency(operation.currency)
-        target.transactions.append(receivedTransaction)
-        target_account.apply_operation(operation, OperationType.CREDIT)        
+        operation.target_account.transactions.append(receivedTransaction)
+        operation.target_account.apply_transaction(receivedTransaction)        
 
         db.commit()
      
         return emitedTransaction.toJSON()     
     except DecreaceAmountError as err:
         db.rollback()            
-        app.logger.error('An error occurred')
+        app.logger.error('An error occurred: {0}'.format(err.message))
         raise DecreaceAmountError(operation)
     except Exception as err:
         db.rollback()            
-        app.logger.error('An error occurred')
+        app.logger.error('An error occurred: {0}'.format(err.message))
         raise Error()
     finally:
         pass

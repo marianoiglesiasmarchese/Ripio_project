@@ -15,34 +15,22 @@ class Transaction(Base):
     id = Column(Integer, primary_key=True)
     type = Column(String(1))
     
-    #origin_user_id = Column(Integer, ForeignKey('users.id'))
-    #origin_user = relationship("User", back_populates="emited_transactions", foreign_keys=[origin_user_id])
-    
-    #target_user_id = Column(Integer, ForeignKey('users.id'))
-    #target_user = relationship("User", back_populates="received_transactions", foreign_keys=[target_user_id])
-    
-    user_id = Column(Integer, ForeignKey('users.id'))
-    user = relationship("User", back_populates="transactions", foreign_keys=[user_id])
-    
-    # operation = relationship("Operation", uselist=False, back_populates="transaction", order_by="Operation.id")
+    account_id = Column(Integer, ForeignKey('accounts.id'))
+    account = relationship("Account", back_populates="transactions", foreign_keys=[account_id])
     
     operation_id = Column(Integer, ForeignKey('operations.id'))
     operation = relationship("Operation", back_populates="transaction") 
  
-    def __init__(self, user, operation, type=None):
-        #self.origin_user = origin_user
-        #self.target_user = target_user
-        self.user = user
+    def __init__(self, operation, type=None):
         self.operation = operation
         self.type = type
     
     def toJSON(self):
         return {
             'id': self.id,
-            'user': self.user.toJSON(),
-            # 'target_user': self.target_user.toJSON(),
             'operation': self.operation.toJSON(),
             'type': self.type,
+            'account': self.account.toJSON()
             }    
     
     @classmethod   

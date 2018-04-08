@@ -17,27 +17,28 @@ class Operation(Base):
    # solo sirve si se pudieran hacer transferencias entre cuentas de diferentes tipos 
    #  ratio =  Column(Integer)
     date = Column(Date)
-    #currency_id = Column(Integer)
-
-    currency_id = Column(Integer, ForeignKey('currencies.id'))
-    currency = relationship("Currency", back_populates="operation", order_by="Currency.id")
-
-    #transaction_id = Column(Integer, ForeignKey('transactions.id'))
-    #transaction = relationship("Transaction", back_populates="operation")
+    
+    origin_account_id = Column(Integer, ForeignKey('accounts.id'))
+    origin_account = relationship("Account", foreign_keys=[origin_account_id]) 
+    
+    target_account_id = Column(Integer, ForeignKey('accounts.id'))
+    target_account = relationship("Account", foreign_keys=[target_account_id]) 
     
     transaction = relationship("Transaction", back_populates="operation", order_by="Transaction.id")
 
-    def __init__(self, amount=None, date=None, currency=None):
+    def __init__(self, amount=None, date=None, origin_account=None, target_account=None):
         self.amount = amount
         self.date = date
-        self.currency = currency
+        self.origin_account = origin_account
+        self.target_account = target_account
                 
     def toJSON(self):
         return {
             'id': self.id,
             'amount': self.amount,
             'date': self.date,
-            'currency': self.currency.toJSON(),
+            'origin_account': self.origin_account.toJSON(),
+            'target_account': self.target_account.toJSON()
             }          
         
     @classmethod   

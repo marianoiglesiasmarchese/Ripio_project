@@ -63,7 +63,7 @@ export class CurrencyService {
 
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error);
-    setInterval(() => {
+    setTimeout(() => {
       this.loaderService.hide();
       this.alertService.error('An error occurred(' + error.status + ') : ' + error.statusText);
     }, 3000);

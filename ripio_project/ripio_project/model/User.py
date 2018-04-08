@@ -20,24 +20,12 @@ class User(Base):
   
     accounts = relationship("Account", order_by="Account.id")
     
-    #emited_transactions = relationship("Transaction", back_populates="user", foreign_keys="Transaction.user_id", order_by="Transaction.id")
-    
-    #received_transactions = relationship("Transaction", back_populates="user", foreign_keys="Transaction.user_id", order_by="Transaction.id")
-    
-    transactions = relationship("Transaction", back_populates="user", foreign_keys="Transaction.user_id", order_by="Transaction.id")
+    #transactions = relationship("Transaction", back_populates="user", foreign_keys="Transaction.user_id", order_by="Transaction.id")
     
     def __init__(self, name=None, email=None, enable=True):
         self.name = name
         self.email = email
         self.enable = enable
-
-    '''
-        def add_emited_transaction(self, transaction):
-            self.emited_transactions.append(transaction)
-    
-        def add_received_transaction(self, transaction):
-            self.received_transactions.append(transaction)
-    '''
         
     def get_balance_for_account(self, account):
         pass 
@@ -48,6 +36,9 @@ class User(Base):
             if account.currency.symbol == currency.symbol: 
                 result = account
         return result 
+    
+    def get_transactions_for_account(self, account):
+        pass
 
     def toJSON(self):
         return {

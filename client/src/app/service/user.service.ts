@@ -125,9 +125,22 @@ export class UserService {
          .catch(err => this.handleError(err));
   }
 
+  getTransactionsForAccount(user: User, account: Account): Promise<Transaction[]> {
+    this.loaderService.show();
+    const userOid: String = user.id;
+    const accountOid: String = account.id;
+    return this.http.get(`${this.userUrl}/${userOid}/accounts/${accountOid}/transactions`)
+         .toPromise()
+         .then(response => {
+            this.loaderService.hide();
+            return response as Transaction[];
+           })
+         .catch(err => this.handleError(err));
+  }
+
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error);
-    setInterval(() => {
+    setTimeout(() => {
       this.loaderService.hide();
       this.alertService.error('An error occurred(' + error.status + ') : ' + error.statusText);
     }, 3000);
